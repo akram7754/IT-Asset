@@ -326,13 +326,13 @@ const VendorManagement = () => {
         <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-200 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Invoiced Value</p>
-            <h3 className="text-2xl font-extrabold text-emerald-600 mt-1">${totalSpend.toLocaleString()}</h3>
+            <h3 className="text-2xl font-extrabold text-emerald-600 mt-1">₹{totalSpend.toLocaleString()}</h3>
             <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-1">
               Procurement & Maintenance Spend
             </span>
           </div>
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100">
-            <DollarSign className="w-6 h-6" />
+          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 flex items-center justify-center font-extrabold text-xl w-12 h-12">
+            ₹
           </div>
         </div>
 
@@ -624,7 +624,7 @@ const VendorManagement = () => {
 
                 <div className="bg-white p-4 rounded-xl shadow-2xs border border-emerald-200 space-y-1">
                   <span className="text-emerald-800 font-bold text-[11px] block uppercase tracking-wider flex items-center gap-1">
-                    <DollarSign className="w-3.5 h-3.5 text-emerald-600" /> Total Amount Spent
+                    <span className="font-extrabold text-xs text-emerald-600">₹</span> Total Amount Spent
                   </span>
                   <p className="text-2xl font-extrabold text-emerald-700 font-mono">
                     ₹{activeUserHistoryData.totalSpent.toLocaleString()}
