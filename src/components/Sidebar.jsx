@@ -29,9 +29,14 @@ const Sidebar = ({ isMobileMenuOpen, onCloseMobileMenu }) => {
   const SidebarContent = () => (
     <div className="flex flex-col h-full w-64 bg-primary text-white">
       <div className="flex items-center justify-between h-20 border-b border-primary-dark px-4">
-        <div className="flex items-center">
-          <Monitor className="w-6 h-6 mr-2 text-cyan-300 flex-shrink-0" />
-          <h1 className="text-xl font-extrabold tracking-wider text-white">Trescon</h1>
+        <div className="flex items-center gap-2.5">
+          <div className="bg-white p-1.5 rounded-xl shadow-md border border-white/20 flex items-center justify-center">
+            <img src="/trescon-logo.png" alt="Trescon 10 Years Logo" className="h-8 w-auto object-contain" />
+          </div>
+          <div>
+            <h1 className="text-sm font-extrabold tracking-wider text-white leading-tight">Trescon</h1>
+            <span className="text-[10px] text-cyan-200 font-extrabold block">10 Years Excellence</span>
+          </div>
         </div>
         {onCloseMobileMenu && (
           <button

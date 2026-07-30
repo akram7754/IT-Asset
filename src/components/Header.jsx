@@ -101,6 +101,7 @@ const Header = ({ onToggleMobileMenu }) => {
           </button>
         )}
         <div className="flex items-center gap-2 sm:gap-3">
+          <img src="/trescon-logo.png" alt="10 Years Trescon Logo" className="h-9 w-auto object-contain bg-white p-1 rounded-lg border border-gray-200 shadow-2xs" />
           <span className="text-xs sm:text-sm font-extrabold tracking-wider text-gray-900 uppercase font-sans">
             Trescon IT Asset Portal
           </span>

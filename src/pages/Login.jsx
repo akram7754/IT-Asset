@@ -115,8 +115,8 @@ const Login = () => {
         
         {/* Brand & Portal Header */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 bg-gradient-to-tr from-primary to-blue-600 rounded-2xl text-white flex items-center justify-center shadow-lg shadow-blue-500/30 mb-3 border border-white/20">
-            <Monitor className="w-8 h-8 text-cyan-300" />
+          <div className="bg-white p-2.5 rounded-2xl shadow-lg border border-gray-100 mb-3 flex items-center justify-center">
+            <img src="/trescon-logo.png" alt="10 Years Trescon Logo" className="h-16 w-auto object-contain" />
           </div>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
             Akram's IT Asset Portal
