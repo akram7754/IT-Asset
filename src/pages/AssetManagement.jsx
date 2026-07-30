@@ -22,18 +22,32 @@ const AssetManagement = () => {
   const [showAssetHistoryInDetails, setShowAssetHistoryInDetails] = useState(false);
   const [assets, setAssets] = useState(() => {
     const keysToScan = ['itam_assets', 'itam_assets_v2', 'itam_assets_v1', 'itam_assets_backup'];
+    let savedArr = [];
     for (const k of keysToScan) {
       const saved = localStorage.getItem(k);
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed) && parsed.length > savedArr.length) {
+            savedArr = parsed;
+          }
         } catch (e) {
           console.error('Failed to parse saved assets:', e);
         }
       }
     }
-    return assetsData;
+
+    if (savedArr.length >= 60) return savedArr;
+
+    // Combine any user local changes with full 65+ assets master dataset
+    const merged = [...savedArr];
+    const existingIds = new Set(savedArr.map(a => a.id));
+    for (const item of assetsData) {
+      if (!existingIds.has(item.id)) {
+        merged.push(item);
+      }
+    }
+    return merged;
   });
 
   // Safely persist assets into LocalStorage & IndexedDB across primary and backup keys
