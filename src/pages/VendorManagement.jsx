@@ -89,31 +89,38 @@ const VendorManagement = () => {
   const [searchTerm, setSearchTerm] = useState(queryFromUrl);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Comprehensive Vendor Data Load (Checks all legacy & current keys)
+  const [vendorToDelete, setVendorToDelete] = useState(null);
+
+  // Comprehensive Vendor Data Load (Checks persistent deleted IDs & user saved state)
   const [vendors, setVendors] = useState(() => {
+    const deletedIds = new Set((() => {
+      try { return JSON.parse(localStorage.getItem('itam_deleted_vendor_ids') || '[]'); } catch (e) { return []; }
+    })());
+
+    const isInitialized = localStorage.getItem('itam_vendors_initialized') === 'true';
+    let loadedArr = null;
+
     try {
-      const keysToScan = [
-        'itam_vendors_table_v4',
-        'itam_vendors_table_v3',
-        'itam_vendors_table_v2',
-        'itam_vendors',
-        'itam_vendors_v1',
-        'itam_vendor_records'
-      ];
-      for (const k of keysToScan) {
-        const saved = localStorage.getItem(k);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const valid = parsed.filter(v => v && typeof v === 'object' && (v.name || v.vendorName));
-            if (valid.length > 0) return valid;
-          }
+      const saved = localStorage.getItem('itam_vendors_table_v4') || localStorage.getItem('itam_vendors');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          loadedArr = parsed;
         }
       }
     } catch (e) {
       console.warn('Failed to load vendors:', e);
     }
-    return defaultVendors;
+
+    if (loadedArr === null) {
+      if (isInitialized) {
+        loadedArr = [];
+      } else {
+        loadedArr = defaultVendors;
+      }
+    }
+
+    return loadedArr.filter(v => v && typeof v === 'object' && !deletedIds.has(v.id));
   });
 
   // UI Modal States
@@ -152,9 +159,16 @@ const VendorManagement = () => {
   useEffect(() => { 
     try { 
       const dataStr = JSON.stringify(vendors);
-      localStorage.setItem(VENDORS_KEY, dataStr);
+      localStorage.setItem('itam_vendors_table_v4', dataStr);
       localStorage.setItem('itam_vendors', dataStr);
       localStorage.setItem('itam_vendors_backup', dataStr);
+      localStorage.setItem('itam_vendors_initialized', 'true');
+      
+      // Clear old legacy keys so they don't resurrect deleted records
+      localStorage.removeItem('itam_vendors_table_v3');
+      localStorage.removeItem('itam_vendors_table_v2');
+      localStorage.removeItem('itam_vendors_v1');
+      localStorage.removeItem('itam_vendor_records');
     } catch (e) {
       console.error('Failed to save vendors:', e);
     } 
@@ -199,12 +213,44 @@ const VendorManagement = () => {
     showToast(`Vendor Record "${editingVendor.name}" updated successfully!`);
   };
 
-  // Vendor Delete Handler
+  // Vendor Delete Handlers
   const handleDeleteVendor = (id, name) => {
-    if (window.confirm(`Are you sure you want to delete record for "${name}" (${id})?`)) {
-      setVendors(vendors.filter(v => v.id !== id));
-      showToast(`Record deleted.`);
+    const target = vendors.find(v => v.id === id);
+    if (target) {
+      setVendorToDelete(target);
+    } else {
+      confirmDeleteVendor(id);
     }
+  };
+
+  const confirmDeleteVendor = (id) => {
+    if (!id) return;
+
+    // 1. Store deleted ID in persistent deleted registry
+    try {
+      const deletedList = JSON.parse(localStorage.getItem('itam_deleted_vendor_ids') || '[]');
+      if (!deletedList.includes(id)) {
+        deletedList.push(id);
+        localStorage.setItem('itam_deleted_vendor_ids', JSON.stringify(deletedList));
+      }
+    } catch (e) {}
+
+    // 2. Filter vendors state
+    const updated = vendors.filter(v => v.id !== id);
+    setVendors(updated);
+
+    // 3. Overwrite all vendor storage keys
+    try {
+      const dataStr = JSON.stringify(updated);
+      localStorage.setItem('itam_vendors_table_v4', dataStr);
+      localStorage.setItem('itam_vendors', dataStr);
+      localStorage.setItem('itam_vendors_backup', dataStr);
+      localStorage.setItem('itam_vendors_initialized', 'true');
+    } catch (e) {}
+
+    if (editingVendor && editingVendor.id === id) setEditingVendor(null);
+    setVendorToDelete(null);
+    showToast(`Vendor Record (${id}) deleted permanently.`);
   };
 
   // Filtering Logic
@@ -1128,6 +1174,45 @@ const VendorManagement = () => {
                 <button type="submit" className="px-5 py-2 font-bold text-white bg-primary hover:bg-primary-dark rounded-lg shadow-md cursor-pointer">Save Changes</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE VENDOR RECORD CONFIRMATION MODAL */}
+      {vendorToDelete && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[110] p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-red-100 animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center space-y-4">
+              <div className="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto border border-red-200 shadow-inner">
+                <Trash2 className="w-7 h-7 text-red-600" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-extrabold text-gray-900">Delete Vendor Record?</h3>
+                <p className="text-xs text-gray-600">
+                  Are you sure you want to permanently delete record for <strong className="text-red-700">{vendorToDelete.name || vendorToDelete.user}</strong> (<span className="font-mono">{vendorToDelete.id}</span>)?
+                </p>
+                <p className="text-[11px] text-red-500 font-semibold pt-1">
+                  Category: "{vendorToDelete.category || vendorToDelete.type}" • Price: ₹{vendorToDelete.price}
+                </p>
+              </div>
+              <div className="pt-2 flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setVendorToDelete(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => confirmDeleteVendor(vendorToDelete.id)}
+                  className="px-5 py-2 text-xs font-extrabold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Yes, Delete Record
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
