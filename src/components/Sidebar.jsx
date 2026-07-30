@@ -65,14 +65,20 @@ const Sidebar = ({ isMobileMenuOpen, onCloseMobileMenu }) => {
         </ul>
       </nav>
       <div className="p-4 border-t border-primary-dark">
-        <NavLink
-          to="/login"
-          onClick={() => onCloseMobileMenu && onCloseMobileMenu()}
-          className="flex items-center px-6 py-3 text-sm font-medium text-blue-100 transition-colors hover:bg-primary-dark hover:text-white rounded-md"
+        <button
+          type="button"
+          onClick={() => {
+            try {
+              localStorage.removeItem('itam_is_logged_in');
+            } catch (e) {}
+            if (onCloseMobileMenu) onCloseMobileMenu();
+            window.location.href = '/login';
+          }}
+          className="w-full flex items-center px-6 py-3 text-sm font-medium text-blue-100 transition-colors hover:bg-primary-dark hover:text-white rounded-md cursor-pointer"
         >
           <LogOut className="w-5 h-5 mr-3" />
           Logout
-        </NavLink>
+        </button>
       </div>
     </div>
   );
