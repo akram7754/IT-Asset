@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('syed@company.com');
+  const [email, setEmail] = useState('akramsheik7754@gmail.com');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +19,9 @@ const Login = () => {
 
   const getSecretPassword = () => {
     try {
-      return localStorage.getItem('itam_syed_password') || 'syed';
+      return localStorage.getItem('itam_akram_password') || 'akram';
     } catch (e) {
-      return 'syed';
+      return 'akram';
     }
   };
 
@@ -35,18 +35,18 @@ const Login = () => {
       const validPassword = (password || '').trim();
       const storedPassword = getSecretPassword();
 
-      // Check if user is Syed (accepts syed@company.com, syed, or admin)
-      const isSyedUser = validEmail === 'syed@company.com' || validEmail === 'syed' || validEmail === 'admin@company.com' || validEmail === 'admin';
+      // Check if user is Akram (accepts akramsheik7754@gmail.com, akram, syed, or admin)
+      const isAkramUser = validEmail === 'akramsheik7754@gmail.com' || validEmail === 'akram' || validEmail.includes('akram') || validEmail === 'syed' || validEmail === 'admin';
       
-      // Validate password against Syed's custom secret password
-      const isPasswordValid = validPassword === storedPassword || validPassword === 'syed' || validPassword === 'syed123';
+      // Validate password against Akram's custom secret password
+      const isPasswordValid = validPassword === storedPassword || validPassword === 'akram' || validPassword === 'akram7754' || validPassword === 'syed';
 
-      if (isSyedUser && isPasswordValid) {
+      if (isAkramUser && isPasswordValid) {
         try {
           localStorage.setItem('itam_is_logged_in', 'true');
-          localStorage.setItem('itam_user_name', 'Syed');
-          localStorage.setItem('itam_user_role', 'Senior Systems Admin');
-          localStorage.setItem('itam_user_email', 'syed@company.com');
+          localStorage.setItem('itam_user_name', 'Akram Sheik');
+          localStorage.setItem('itam_user_role', 'IT Administrator');
+          localStorage.setItem('itam_user_email', 'akramsheik7754@gmail.com');
         } catch (err) {
           console.warn('LocalStorage error during login:', err);
         }
@@ -55,7 +55,7 @@ const Login = () => {
         navigate('/');
       } else {
         setIsLoading(false);
-        setErrorMessage('❌ Access Denied: Incorrect password. Only Syed is authorized to log in to this portal.');
+        setErrorMessage('❌ Access Denied: Incorrect password. Only Akram is authorized to log in to this portal.');
       }
     }, 450);
   };
@@ -65,7 +65,7 @@ const Login = () => {
     setChangePassStatus(null);
 
     const currentSecret = getSecretPassword();
-    if (oldPassInput.trim() !== currentSecret && oldPassInput.trim() !== 'syed') {
+    if (oldPassInput.trim() !== currentSecret && oldPassInput.trim() !== 'akram' && oldPassInput.trim() !== 'syed') {
       setChangePassStatus({ type: 'error', msg: 'Current password is incorrect!' });
       return;
     }
@@ -81,8 +81,8 @@ const Login = () => {
     }
 
     try {
-      localStorage.setItem('itam_syed_password', newPassInput.trim());
-      setChangePassStatus({ type: 'success', msg: 'Password updated successfully! You can now log in.' });
+      localStorage.setItem('itam_akram_password', newPassInput.trim());
+      setChangePassStatus({ type: 'success', msg: 'Password updated successfully! You can now log in with your new secret password.' });
       setPassword(newPassInput.trim());
       setTimeout(() => {
         setIsChangePassModalOpen(false);
@@ -112,10 +112,10 @@ const Login = () => {
             <Monitor className="w-8 h-8 text-cyan-300" />
           </div>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Syed's IT Asset Portal
+            Akram's IT Asset Portal
           </h1>
           <p className="mt-1 text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
-            🔒 Private Access Restricted Strictly to Syed
+            🔒 Private Access Restricted Strictly to Akram
           </p>
         </div>
 
@@ -130,7 +130,7 @@ const Login = () => {
         <form className="space-y-4" onSubmit={handleLoginSubmit}>
           <div>
             <label htmlFor="email" className="block text-xs font-bold text-gray-700 mb-1">
-              Syed's Email Address
+              Akram's Office Gmail Address
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -143,14 +143,14 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full py-2.5 pl-9 pr-3 text-xs border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-bold text-gray-900 bg-white"
-                placeholder="syed@company.com"
+                placeholder="akramsheik7754@gmail.com"
               />
             </div>
           </div>
 
           <div>
             <label htmlFor="password" className="block text-xs font-bold text-gray-700 mb-1">
-              Personal Secret Password
+              Akram's Secret Password
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -194,10 +194,10 @@ const Login = () => {
             className="w-full py-3 px-4 text-xs font-extrabold text-white bg-primary hover:bg-primary-dark active:scale-[0.98] rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isLoading ? (
-              <span>Authenticating Syed...</span>
+              <span>Authenticating Akram...</span>
             ) : (
               <>
-                <span>Sign In to Syed's Portal</span>
+                <span>Sign In to Akram's Portal</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -221,7 +221,7 @@ const Login = () => {
             <div className="px-6 py-4 bg-gradient-to-r from-indigo-900 to-blue-900 text-white flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <KeyRound className="w-5 h-5 text-cyan-300" />
-                <h3 className="font-extrabold text-sm">Change Syed's Secret Password</h3>
+                <h3 className="font-extrabold text-sm">Change Akram's Secret Password</h3>
               </div>
               <button 
                 onClick={() => setIsChangePassModalOpen(false)} 
@@ -245,7 +245,7 @@ const Login = () => {
                 <input
                   type="password"
                   required
-                  placeholder="Enter current password (default: syed)"
+                  placeholder="Enter current password (default: akram)"
                   value={oldPassInput}
                   onChange={(e) => setOldPassInput(e.target.value)}
                   className="w-full py-2 px-3 border border-gray-300 rounded-lg text-xs font-mono font-bold focus:outline-none focus:ring-1 focus:ring-primary"

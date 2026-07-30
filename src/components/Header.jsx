@@ -75,15 +75,15 @@ const Header = ({ onToggleMobileMenu }) => {
   };
 
   const userName = (() => {
-    try { return localStorage.getItem('itam_user_name') || 'Syed'; } catch (e) { return 'Syed'; }
+    try { return localStorage.getItem('itam_user_name') || 'Akram Sheik'; } catch (e) { return 'Akram Sheik'; }
   })();
 
   const userRole = (() => {
-    try { return localStorage.getItem('itam_user_role') || 'Senior Systems Admin'; } catch (e) { return 'Senior Systems Admin'; }
+    try { return localStorage.getItem('itam_user_role') || 'IT Administrator'; } catch (e) { return 'IT Administrator'; }
   })();
 
   const userEmail = (() => {
-    try { return localStorage.getItem('itam_user_email') || 'syed@company.com'; } catch (e) { return 'syed@company.com'; }
+    try { return localStorage.getItem('itam_user_email') || 'akramsheik7754@gmail.com'; } catch (e) { return 'akramsheik7754@gmail.com'; }
   })();
 
   return (

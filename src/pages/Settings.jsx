@@ -306,7 +306,7 @@ const Settings = () => {
                     localStorage.setItem('itam_user_role', roleVal);
                     localStorage.setItem('itam_user_email', emailVal);
                     if (newPassVal && newPassVal.trim()) {
-                      localStorage.setItem('itam_syed_password', newPassVal.trim());
+                      localStorage.setItem('itam_akram_password', newPassVal.trim());
                     }
                   } catch (err) {}
                   showToast('Profile and security password updated successfully!');
@@ -321,7 +321,7 @@ const Settings = () => {
                       type="text" 
                       name="userNameInput"
                       className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-bold text-gray-900" 
-                      defaultValue={localStorage.getItem('itam_user_name') || 'Syed'} 
+                      defaultValue={localStorage.getItem('itam_user_name') || 'Akram Sheik'} 
                     />
                   </div>
                   <div>
@@ -330,25 +330,25 @@ const Settings = () => {
                       type="text" 
                       name="userRoleInput"
                       className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-semibold text-gray-800" 
-                      defaultValue={localStorage.getItem('itam_user_role') || 'Senior Systems Admin'} 
+                      defaultValue={localStorage.getItem('itam_user_role') || 'IT Administrator'} 
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">Email Address</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Office Gmail Address</label>
                   <input 
                     type="email" 
                     name="userEmailInput"
-                    className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg font-mono text-gray-800 bg-white" 
-                    defaultValue={localStorage.getItem('itam_user_email') || 'syed@company.com'} 
+                    className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg font-mono text-gray-800 bg-white font-bold" 
+                    defaultValue={localStorage.getItem('itam_user_email') || 'akramsheik7754@gmail.com'} 
                   />
                 </div>
 
                 {/* Password Management Box */}
                 <div className="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100 space-y-3">
                   <h4 className="font-extrabold text-indigo-950 text-xs flex items-center gap-1.5 uppercase tracking-wider">
-                    <Shield className="w-4 h-4 text-indigo-600" /> Syed's Secret Portal Password
+                    <Shield className="w-4 h-4 text-indigo-600" /> Akram's Secret Portal Password
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -362,7 +362,7 @@ const Settings = () => {
                     </div>
                     <div className="flex items-end">
                       <p className="text-[11px] text-gray-500 leading-normal">
-                        Default password: <strong className="font-mono text-indigo-900">syed</strong>. Updating this will change the password required at the login screen.
+                        Default password: <strong className="font-mono text-indigo-900">akram</strong>. Updating this will change the password required at the login screen.
                       </p>
                     </div>
                   </div>
