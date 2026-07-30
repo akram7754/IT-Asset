@@ -20,34 +20,36 @@ const AssetManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState('25');
   const [showAssetHistoryInDetails, setShowAssetHistoryInDetails] = useState(false);
+  const [assetToDelete, setAssetToDelete] = useState(null);
   const [assets, setAssets] = useState(() => {
-    const keysToScan = ['itam_assets', 'itam_assets_v2', 'itam_assets_v1', 'itam_assets_backup'];
-    let savedArr = [];
-    for (const k of keysToScan) {
-      const saved = localStorage.getItem(k);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > savedArr.length) {
-            savedArr = parsed;
-          }
-        } catch (e) {
-          console.error('Failed to parse saved assets:', e);
+    const deletedIds = new Set((() => {
+      try { return JSON.parse(localStorage.getItem('itam_deleted_asset_ids') || '[]'); } catch (e) { return []; }
+    })());
+
+    const saved = localStorage.getItem('itam_assets');
+    let loadedArr = [];
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) loadedArr = parsed;
+      } catch (e) {
+        console.error('Failed to parse saved assets:', e);
+      }
+    }
+
+    if (loadedArr.length === 0) {
+      loadedArr = assetsData;
+    } else {
+      // Merge in any missing master assets that haven't been explicitly deleted
+      const existingIds = new Set(loadedArr.map(a => a.id));
+      for (const item of assetsData) {
+        if (!existingIds.has(item.id) && !deletedIds.has(item.id)) {
+          loadedArr.push(item);
         }
       }
     }
 
-    if (savedArr.length >= 60) return savedArr;
-
-    // Combine any user local changes with full 65+ assets master dataset
-    const merged = [...savedArr];
-    const existingIds = new Set(savedArr.map(a => a.id));
-    for (const item of assetsData) {
-      if (!existingIds.has(item.id)) {
-        merged.push(item);
-      }
-    }
-    return merged;
+    return loadedArr.filter(a => !deletedIds.has(a.id));
   });
 
   // Safely persist assets into LocalStorage & IndexedDB across primary and backup keys
@@ -367,11 +369,46 @@ const AssetManagement = () => {
   };
 
   const handleDeleteAsset = (id) => {
-    if (window.confirm(`Are you sure you want to delete asset ${id}?`)) {
-      setAssets(assets.filter((a) => a.id !== id));
-      if (viewingAsset && viewingAsset.id === id) setViewingAsset(null);
-      showNotification(`Asset ${id} deleted successfully.`);
+    const target = assets.find(a => a.id === id);
+    if (target) {
+      setAssetToDelete(target);
+    } else {
+      confirmDeleteAsset(id);
     }
+  };
+
+  const confirmDeleteAsset = async (id) => {
+    if (!id) return;
+
+    // 1. Save deleted ID to persistent storage
+    try {
+      const deletedList = JSON.parse(localStorage.getItem('itam_deleted_asset_ids') || '[]');
+      if (!deletedList.includes(id)) {
+        deletedList.push(id);
+        localStorage.setItem('itam_deleted_asset_ids', JSON.stringify(deletedList));
+      }
+    } catch (e) {}
+
+    // 2. Delete memo file from IndexedDB
+    try {
+      await deleteMemoFromIDB(id);
+    } catch (e) {}
+
+    // 3. Update state
+    const updatedAssets = assets.filter((a) => a.id !== id);
+    setAssets(updatedAssets);
+
+    // 4. Overwrite all storage keys
+    try {
+      localStorage.setItem('itam_assets', JSON.stringify(updatedAssets));
+      localStorage.setItem('itam_assets_v4', JSON.stringify(updatedAssets));
+      localStorage.setItem('itam_assets_backup', JSON.stringify(updatedAssets));
+    } catch (e) {}
+
+    if (viewingAsset && viewingAsset.id === id) setViewingAsset(null);
+    if (editingAsset && editingAsset.id === id) setEditingAsset(null);
+    setAssetToDelete(null);
+    showNotification(`Asset ${id} permanently deleted.`);
   };
 
   const downloadSampleCSV = () => {
@@ -3480,6 +3517,43 @@ const AssetManagement = () => {
               >
                 ✓ Close Verification Certificate
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE ASSET CONFIRMATION MODAL */}
+      {assetToDelete && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[110] p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-red-100 animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center space-y-4">
+              <div className="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto border border-red-200 shadow-inner">
+                <Trash2 className="w-7 h-7 text-red-600" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-extrabold text-gray-900">Delete Asset Record?</h3>
+                <p className="text-xs text-gray-600">
+                  Are you sure you want to permanently delete <strong className="text-red-700">{assetToDelete.name}</strong> (<span className="font-mono">{assetToDelete.id}</span>)?
+                </p>
+                <p className="text-[11px] text-red-500 font-semibold pt-1">This operation will remove the asset and attached memo files completely.</p>
+              </div>
+              <div className="pt-2 flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setAssetToDelete(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => confirmDeleteAsset(assetToDelete.id)}
+                  className="px-5 py-2 text-xs font-extrabold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Yes, Delete Asset
+                </button>
+              </div>
             </div>
           </div>
         </div>
