@@ -139,9 +139,9 @@ const Header = ({ onToggleMobileMenu }) => {
           {isNotificationsOpen && (
             <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
               
-              <div className="px-4 py-3 bg-gradient-to-r from-indigo-900 to-blue-900 text-white flex justify-between items-center">
+              <div className="px-4 py-3 bg-gradient-to-r from-[#00A3A6] to-[#007578] text-white flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-cyan-300" />
+                  <Bell className="w-4 h-4 text-teal-100" />
                   <span className="font-extrabold text-xs tracking-wider">System Notifications</span>
                   {unreadCount > 0 && (
                     <span className="px-2 py-0.5 bg-red-500 text-white text-[10px] font-extrabold rounded-full">
@@ -152,7 +152,7 @@ const Header = ({ onToggleMobileMenu }) => {
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllRead}
-                    className="text-[11px] font-bold text-cyan-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1"
+                    className="text-[11px] font-bold text-teal-100 hover:text-white transition-colors cursor-pointer flex items-center gap-1"
                   >
                     <CheckCheck className="w-3.5 h-3.5" /> Mark read
                   </button>
@@ -166,8 +166,8 @@ const Header = ({ onToggleMobileMenu }) => {
                   return (
                     <div
                       key={n.id}
-                      className={`p-3.5 transition-colors flex items-start gap-3 hover:bg-blue-50/60 ${
-                        !n.read ? 'bg-blue-50/30' : 'bg-white'
+                      className={`p-3.5 transition-colors flex items-start gap-3 hover:bg-teal-50/60 ${
+                        !n.read ? 'bg-teal-50/30' : 'bg-white'
                       }`}
                     >
                       <div className={`p-2 rounded-xl border flex-shrink-0 mt-0.5 ${n.color}`}>
@@ -194,7 +194,7 @@ const Header = ({ onToggleMobileMenu }) => {
                     setIsNotificationsOpen(false);
                     navigate('/maintenance');
                   }}
-                  className="w-full py-1.5 text-xs font-bold text-primary hover:text-primary-dark transition-colors cursor-pointer"
+                  className="w-full py-1.5 text-xs font-bold text-[#00A3A6] hover:text-[#007578] transition-colors cursor-pointer"
                 >
                   View All Maintenance Tickets & Log →
                 </button>
@@ -217,14 +217,14 @@ const Header = ({ onToggleMobileMenu }) => {
             className="flex items-center gap-2.5 p-1.5 hover:bg-gray-100 rounded-xl transition-all border border-transparent hover:border-gray-200 cursor-pointer active:scale-95"
             title="Account Menu"
           >
-            <div className="w-9 h-9 bg-primary text-white rounded-xl flex items-center justify-center font-extrabold text-sm shadow-xs border border-primary-dark">
+            <div className="w-9 h-9 bg-[#00A3A6] text-white rounded-xl flex items-center justify-center font-extrabold text-sm shadow-xs border border-[#007578]">
               {userName.charAt(0).toUpperCase()}
             </div>
             <div className="hidden md:block text-left pr-1">
               <p className="font-extrabold text-gray-900 leading-tight">{userName}</p>
               <p className="text-[10px] text-gray-500 font-medium">{userRole}</p>
             </div>
-            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isProfileMenuOpen ? 'rotate-180 text-primary' : ''}`} />
+            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isProfileMenuOpen ? 'rotate-180 text-[#00A3A6]' : ''}`} />
           </button>
 
           {/* User Account Menu Dropdown */}
@@ -232,18 +232,18 @@ const Header = ({ onToggleMobileMenu }) => {
             <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
               
               {/* Account Card Header */}
-              <div className="p-4 bg-gradient-to-r from-blue-900 to-indigo-950 text-white space-y-1">
+              <div className="p-4 bg-gradient-to-r from-[#00A3A6] to-[#007578] text-white space-y-1">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-cyan-400 text-indigo-950 font-extrabold flex items-center justify-center text-base shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-white text-[#007578] font-extrabold flex items-center justify-center text-base shadow-sm">
                     {userName.charAt(0).toUpperCase()}
                   </div>
                   <div className="overflow-hidden">
                     <h4 className="font-extrabold text-xs text-white truncate">{userName}</h4>
-                    <p className="text-[11px] text-cyan-200 font-mono truncate">{userEmail}</p>
+                    <p className="text-[11px] text-teal-100 font-mono truncate">{userEmail}</p>
                   </div>
                 </div>
                 <div className="pt-2">
-                  <span className="px-2.5 py-0.5 bg-cyan-400/20 text-cyan-300 text-[10px] font-extrabold rounded-md border border-cyan-400/30 inline-block">
+                  <span className="px-2.5 py-0.5 bg-white/20 text-white text-[10px] font-extrabold rounded-md border border-white/30 inline-block">
                     🛡️ {userRole}
                   </span>
                 </div>
