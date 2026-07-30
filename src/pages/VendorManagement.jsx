@@ -89,15 +89,25 @@ const VendorManagement = () => {
   const [searchTerm, setSearchTerm] = useState(queryFromUrl);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Safe Vendors State Load
+  // Comprehensive Vendor Data Load (Checks all legacy & current keys)
   const [vendors, setVendors] = useState(() => {
     try {
-      const saved = localStorage.getItem(VENDORS_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const valid = parsed.filter(v => v && typeof v === 'object' && (v.name || v.vendorName));
-          if (valid.length > 0) return valid;
+      const keysToScan = [
+        'itam_vendors_table_v4',
+        'itam_vendors_table_v3',
+        'itam_vendors_table_v2',
+        'itam_vendors',
+        'itam_vendors_v1',
+        'itam_vendor_records'
+      ];
+      for (const k of keysToScan) {
+        const saved = localStorage.getItem(k);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const valid = parsed.filter(v => v && typeof v === 'object' && (v.name || v.vendorName));
+            if (valid.length > 0) return valid;
+          }
         }
       }
     } catch (e) {
@@ -138,10 +148,13 @@ const VendorManagement = () => {
 
   const [newVendor, setNewVendor] = useState(initialVendorState);
 
-  // LocalStorage Persist Effect
+  // LocalStorage Persist Effect across primary and backup keys
   useEffect(() => { 
     try { 
-      localStorage.setItem(VENDORS_KEY, JSON.stringify(vendors)); 
+      const dataStr = JSON.stringify(vendors);
+      localStorage.setItem(VENDORS_KEY, dataStr);
+      localStorage.setItem('itam_vendors', dataStr);
+      localStorage.setItem('itam_vendors_backup', dataStr);
     } catch (e) {
       console.error('Failed to save vendors:', e);
     } 

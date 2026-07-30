@@ -21,21 +21,27 @@ const AssetManagement = () => {
   const [itemsPerPage, setItemsPerPage] = useState('25');
   const [showAssetHistoryInDetails, setShowAssetHistoryInDetails] = useState(false);
   const [assets, setAssets] = useState(() => {
-    const saved = localStorage.getItem('itam_assets');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      } catch (e) {
-        console.error('Failed to parse saved assets:', e);
+    const keysToScan = ['itam_assets', 'itam_assets_v2', 'itam_assets_v1', 'itam_assets_backup'];
+    for (const k of keysToScan) {
+      const saved = localStorage.getItem(k);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {
+          console.error('Failed to parse saved assets:', e);
+        }
       }
     }
     return assetsData;
   });
 
-  // Safely persist assets into LocalStorage & IndexedDB (prevents QuotaExceededError)
+  // Safely persist assets into LocalStorage & IndexedDB across primary and backup keys
   useEffect(() => {
     saveAssetsToStorage(assets);
+    try {
+      localStorage.setItem('itam_assets_backup', JSON.stringify(assets));
+    } catch (e) {}
   }, [assets]);
 
   // On mount, hydrate full memo file data from IndexedDB
