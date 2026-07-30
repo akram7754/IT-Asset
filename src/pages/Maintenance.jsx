@@ -15,16 +15,34 @@ const Maintenance = () => {
 
   // Persistent Maintenance Tasks State
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('itam_maintenance_tasks');
-    if (saved) {
-      try {
+    const deletedIds = new Set((() => {
+      try { return JSON.parse(localStorage.getItem('itam_deleted_maintenance_ids') || '[]'); } catch (e) { return []; }
+    })());
+
+    const isInitialized = localStorage.getItem('itam_maintenance_initialized') === 'true';
+    let loadedArr = null;
+
+    try {
+      const saved = localStorage.getItem('itam_maintenance_tasks');
+      if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {
-        console.error('Failed to parse saved maintenance tasks:', e);
+        if (Array.isArray(parsed)) {
+          loadedArr = parsed;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse saved maintenance tasks:', e);
+    }
+
+    if (loadedArr === null) {
+      if (isInitialized) {
+        loadedArr = [];
+      } else {
+        loadedArr = maintenanceTasksData;
       }
     }
-    return maintenanceTasksData;
+
+    return loadedArr.filter(t => t && typeof t === 'object' && !deletedIds.has(t.id));
   });
 
   // Modal States
@@ -48,6 +66,7 @@ const Maintenance = () => {
   useEffect(() => {
     try {
       localStorage.setItem('itam_maintenance_tasks', JSON.stringify(tasks));
+      localStorage.setItem('itam_maintenance_initialized', 'true');
     } catch (e) {
       console.warn('LocalStorage save error:', e);
     }
@@ -116,9 +135,29 @@ const Maintenance = () => {
   // Handler: Permanently Delete Ticket
   const confirmDeleteTask = (id) => {
     if (!id) return;
-    setTasks(tasks.filter(t => t.id !== id));
+
+    // 1. Store deleted ID in persistent deleted registry
+    try {
+      const deletedList = JSON.parse(localStorage.getItem('itam_deleted_maintenance_ids') || '[]');
+      if (!deletedList.includes(id)) {
+        deletedList.push(id);
+        localStorage.setItem('itam_deleted_maintenance_ids', JSON.stringify(deletedList));
+      }
+    } catch (e) {}
+
+    // 2. Filter tasks state
+    const updated = tasks.filter(t => t.id !== id);
+    setTasks(updated);
+
+    // 3. Save to localStorage
+    try {
+      localStorage.setItem('itam_maintenance_tasks', JSON.stringify(updated));
+      localStorage.setItem('itam_maintenance_initialized', 'true');
+    } catch (e) {}
+
+    if (editingTask && editingTask.id === id) setEditingTask(null);
     setTaskToDelete(null);
-    showToast(`Maintenance Ticket ${id} deleted permanently.`);
+    showToast(`Maintenance Ticket (${id}) deleted permanently.`);
   };
 
   return (
