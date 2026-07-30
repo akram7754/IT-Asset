@@ -299,12 +299,17 @@ const Settings = () => {
                   const nameVal = form.userNameInput.value;
                   const roleVal = form.userRoleInput.value;
                   const emailVal = form.userEmailInput.value;
+                  const newPassVal = form.newSyedPasswordInput.value;
+
                   try {
                     localStorage.setItem('itam_user_name', nameVal);
                     localStorage.setItem('itam_user_role', roleVal);
                     localStorage.setItem('itam_user_email', emailVal);
+                    if (newPassVal && newPassVal.trim()) {
+                      localStorage.setItem('itam_syed_password', newPassVal.trim());
+                    }
                   } catch (err) {}
-                  showToast('Profile updated successfully!');
+                  showToast('Profile and security password updated successfully!');
                   setTimeout(() => window.location.reload(), 1000);
                 }} 
                 className="space-y-4"
@@ -338,6 +343,29 @@ const Settings = () => {
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg font-mono text-gray-800 bg-white" 
                     defaultValue={localStorage.getItem('itam_user_email') || 'syed@company.com'} 
                   />
+                </div>
+
+                {/* Password Management Box */}
+                <div className="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100 space-y-3">
+                  <h4 className="font-extrabold text-indigo-950 text-xs flex items-center gap-1.5 uppercase tracking-wider">
+                    <Shield className="w-4 h-4 text-indigo-600" /> Syed's Secret Portal Password
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">New Secret Password</label>
+                      <input
+                        type="password"
+                        name="newSyedPasswordInput"
+                        placeholder="Leave blank to keep current password"
+                        className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-mono font-bold bg-white"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <p className="text-[11px] text-gray-500 leading-normal">
+                        Default password: <strong className="font-mono text-indigo-900">syed</strong>. Updating this will change the password required at the login screen.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="pt-2 flex justify-end">

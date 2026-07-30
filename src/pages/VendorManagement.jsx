@@ -414,8 +414,8 @@ const VendorManagement = () => {
             </thead>
             <tbody className="divide-y divide-gray-100 bg-white">
               {currentVendors.length > 0 ? (
-                currentVendors.map((vendor) => (
-                  <tr key={vendor.id} className="hover:bg-blue-50/30 transition-colors">
+                currentVendors.map((vendor, idx) => (
+                  <tr key={vendor.id ? `${vendor.id}-${idx}` : idx} className="hover:bg-blue-50/30 transition-colors">
                     {/* 1. Date */}
                     <td className="px-4 py-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-1.5 font-mono text-gray-800 font-bold">
