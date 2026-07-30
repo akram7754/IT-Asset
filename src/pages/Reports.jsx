@@ -82,14 +82,14 @@ const Reports = () => {
                 axisLine={false} 
                 tickLine={false} 
                 tick={{ fill: '#6b7280' }}
-                tickFormatter={(value) => `$${value/1000}k`}
+                tickFormatter={(value) => `₹${value/1000}k`}
               />
               <Tooltip 
                 cursor={{ fill: '#f3f4f6' }}
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                formatter={(value) => [`$${value.toLocaleString()}`, 'Total Value']}
+                formatter={(value) => [`₹${value.toLocaleString()}`, 'Total Value']}
               />
-              <Bar dataKey="value" fill="#1e40af" radius={[4, 4, 0, 0]} maxBarSize={60} />
+              <Bar dataKey="value" fill="#00A3A6" radius={[4, 4, 0, 0]} maxBarSize={60} />
             </BarChart>
           </ResponsiveContainer>
         </div>
