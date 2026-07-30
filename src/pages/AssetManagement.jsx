@@ -2410,10 +2410,20 @@ const AssetManagement = () => {
                       )}
                       <button
                         type="button"
-                        onClick={() => setEditingAsset(prev => ({ ...prev, memoFile: '', memoFileName: '', memoUploadDate: '' }))}
-                        className="text-red-500 hover:text-red-700 text-xs font-bold px-1 cursor-pointer"
+                        onClick={async () => {
+                          if (editingAsset && editingAsset.id) {
+                            await deleteMemoFromIDB(editingAsset.id);
+                          }
+                          const cleared = { ...editingAsset, memoFile: '', memoFileName: '', memoUploadDate: '' };
+                          setEditingAsset(cleared);
+                          setAssets(prev => prev.map(a => a.id === editingAsset.id ? cleared : a));
+                          showNotification('Attached memo file deleted successfully!');
+                        }}
+                        className="px-2 py-1 text-xs font-extrabold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 rounded-md transition-colors cursor-pointer flex items-center gap-1"
+                        title="Delete attached file completely"
                       >
-                        &times; Remove
+                        <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                        Delete File
                       </button>
                     </div>
                   )}

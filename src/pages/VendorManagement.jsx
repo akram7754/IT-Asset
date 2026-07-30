@@ -1107,10 +1107,17 @@ const VendorManagement = () => {
                   {editingVendor.invoiceFileName && (
                     <button
                       type="button"
-                      onClick={() => setEditingVendor(prev => ({ ...prev, invoiceFile: '', invoiceFileName: '' }))}
-                      className="text-red-500 hover:text-red-700 text-xs font-bold px-1 cursor-pointer"
+                      onClick={() => {
+                        const cleared = { ...editingVendor, invoiceFile: '', invoiceFileName: '' };
+                        setEditingVendor(cleared);
+                        setVendors(prev => prev.map(v => v.id === editingVendor.id ? cleared : v));
+                        showToast('Vendor invoice file deleted successfully!');
+                      }}
+                      className="px-2 py-1 text-xs font-extrabold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 rounded-md transition-colors cursor-pointer flex items-center gap-1"
+                      title="Delete attached vendor bill file"
                     >
-                      &times; Remove
+                      <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                      Delete Bill
                     </button>
                   )}
                 </div>
