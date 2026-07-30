@@ -74,8 +74,16 @@ const Header = ({ onToggleMobileMenu }) => {
     window.location.href = '/login';
   };
 
+  const userName = (() => {
+    try { return localStorage.getItem('itam_user_name') || 'Syed'; } catch (e) { return 'Syed'; }
+  })();
+
+  const userRole = (() => {
+    try { return localStorage.getItem('itam_user_role') || 'Senior Systems Admin'; } catch (e) { return 'Senior Systems Admin'; }
+  })();
+
   const userEmail = (() => {
-    try { return localStorage.getItem('itam_user_email') || 'admin@company.com'; } catch (e) { return 'admin@company.com'; }
+    try { return localStorage.getItem('itam_user_email') || 'syed@company.com'; } catch (e) { return 'syed@company.com'; }
   })();
 
   return (
@@ -210,11 +218,11 @@ const Header = ({ onToggleMobileMenu }) => {
             title="Account Menu"
           >
             <div className="w-9 h-9 bg-primary text-white rounded-xl flex items-center justify-center font-extrabold text-sm shadow-xs border border-primary-dark">
-              <User className="w-5 h-5 text-white" />
+              {userName.charAt(0).toUpperCase()}
             </div>
             <div className="hidden md:block text-left pr-1">
-              <p className="font-extrabold text-gray-900 leading-tight">Admin User</p>
-              <p className="text-[10px] text-gray-500 font-medium">IT Administrator</p>
+              <p className="font-extrabold text-gray-900 leading-tight">{userName}</p>
+              <p className="text-[10px] text-gray-500 font-medium">{userRole}</p>
             </div>
             <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isProfileMenuOpen ? 'rotate-180 text-primary' : ''}`} />
           </button>
@@ -227,16 +235,16 @@ const Header = ({ onToggleMobileMenu }) => {
               <div className="p-4 bg-gradient-to-r from-blue-900 to-indigo-950 text-white space-y-1">
                 <div className="flex items-center gap-2.5">
                   <div className="w-10 h-10 rounded-xl bg-cyan-400 text-indigo-950 font-extrabold flex items-center justify-center text-base shadow-sm">
-                    A
+                    {userName.charAt(0).toUpperCase()}
                   </div>
                   <div className="overflow-hidden">
-                    <h4 className="font-extrabold text-xs text-white truncate">Admin User</h4>
+                    <h4 className="font-extrabold text-xs text-white truncate">{userName}</h4>
                     <p className="text-[11px] text-cyan-200 font-mono truncate">{userEmail}</p>
                   </div>
                 </div>
                 <div className="pt-2">
                   <span className="px-2.5 py-0.5 bg-cyan-400/20 text-cyan-300 text-[10px] font-extrabold rounded-md border border-cyan-400/30 inline-block">
-                    🛡️ System Administrator
+                    🛡️ {userRole}
                   </span>
                 </div>
               </div>

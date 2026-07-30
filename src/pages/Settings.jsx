@@ -292,27 +292,61 @@ const Settings = () => {
           ) : (
             <div className="space-y-6">
               <h3 className="text-sm font-bold text-gray-900">Profile & User Preferences</h3>
-              <form className="space-y-4">
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.target;
+                  const nameVal = form.userNameInput.value;
+                  const roleVal = form.userRoleInput.value;
+                  const emailVal = form.userEmailInput.value;
+                  try {
+                    localStorage.setItem('itam_user_name', nameVal);
+                    localStorage.setItem('itam_user_role', roleVal);
+                    localStorage.setItem('itam_user_email', emailVal);
+                  } catch (err) {}
+                  showToast('Profile updated successfully!');
+                  setTimeout(() => window.location.reload(), 1000);
+                }} 
+                className="space-y-4"
+              >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">First Name</label>
-                    <input type="text" className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-medium" defaultValue="Admin" />
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Display Name / Admin Name</label>
+                    <input 
+                      type="text" 
+                      name="userNameInput"
+                      className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-bold text-gray-900" 
+                      defaultValue={localStorage.getItem('itam_user_name') || 'Syed'} 
+                    />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">Last Name</label>
-                    <input type="text" className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-medium" defaultValue="User" />
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Administrative Role</label>
+                    <input 
+                      type="text" 
+                      name="userRoleInput"
+                      className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-semibold text-gray-800" 
+                      defaultValue={localStorage.getItem('itam_user_role') || 'Senior Systems Admin'} 
+                    />
                   </div>
                 </div>
                 
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">Email Address</label>
-                  <input type="email" className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg bg-gray-50 font-mono text-gray-700" defaultValue="admin@company.com" disabled />
-                  <p className="mt-1 text-[11px] text-gray-500">Contact IT support to change your primary admin email address.</p>
+                  <input 
+                    type="email" 
+                    name="userEmailInput"
+                    className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg font-mono text-gray-800 bg-white" 
+                    defaultValue={localStorage.getItem('itam_user_email') || 'syed@company.com'} 
+                  />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">Role & Administrative Level</label>
-                  <input type="text" className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg bg-gray-50 text-gray-500 font-bold" defaultValue="System Administrator" disabled />
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-5 py-2 text-xs font-extrabold text-white bg-primary hover:bg-primary-dark rounded-xl transition-all shadow-md cursor-pointer"
+                  >
+                    Save Profile Changes
+                  </button>
                 </div>
               </form>
             </div>
