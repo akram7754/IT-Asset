@@ -35,29 +35,36 @@ const Login = () => {
       const validPassword = (password || '').trim();
       const storedPassword = getSecretPassword();
 
-      // Check if user is Akram (accepts akramsheik7754@gmail.com, akram, syed, or admin)
-      const isAkramUser = validEmail === 'akramsheik7754@gmail.com' || validEmail === 'akram' || validEmail.includes('akram') || validEmail === 'syed' || validEmail === 'admin';
-      
-      // Validate password against Akram's custom secret password
-      const isPasswordValid = validPassword === storedPassword || validPassword === 'akram' || validPassword === 'akram7754' || validPassword === 'syed';
+      // STRICT EMAIL VALIDATION: Only akramsheik7754@gmail.com or akram
+      const isAkramUser = validEmail === 'akramsheik7754@gmail.com' || validEmail === 'akram';
 
-      if (isAkramUser && isPasswordValid) {
-        try {
-          localStorage.setItem('itam_is_logged_in', 'true');
-          localStorage.setItem('itam_user_name', 'Akram Sheik');
-          localStorage.setItem('itam_user_role', 'IT Administrator');
-          localStorage.setItem('itam_user_email', 'akramsheik7754@gmail.com');
-        } catch (err) {
-          console.warn('LocalStorage error during login:', err);
-        }
+      // STRICT PASSWORD VALIDATION: Only exact matching secret password
+      const isPasswordValid = validPassword === storedPassword;
 
+      if (!isAkramUser) {
         setIsLoading(false);
-        navigate('/');
-      } else {
-        setIsLoading(false);
-        setErrorMessage('❌ Access Denied: Incorrect password. Only Akram is authorized to log in to this portal.');
+        setErrorMessage('❌ Unauthorized User: Access is restricted strictly to Akram (akramsheik7754@gmail.com).');
+        return;
       }
-    }, 450);
+
+      if (!isPasswordValid) {
+        setIsLoading(false);
+        setErrorMessage('❌ Incorrect Password: Only Akram with the correct secret password can log in.');
+        return;
+      }
+
+      try {
+        localStorage.setItem('itam_is_logged_in', 'true');
+        localStorage.setItem('itam_user_name', 'Akram Sheik');
+        localStorage.setItem('itam_user_role', 'IT Administrator');
+        localStorage.setItem('itam_user_email', 'akramsheik7754@gmail.com');
+      } catch (err) {
+        console.warn('LocalStorage error during login:', err);
+      }
+
+      setIsLoading(false);
+      navigate('/');
+    }, 400);
   };
 
   const handleSaveNewPassword = (e) => {
@@ -65,7 +72,7 @@ const Login = () => {
     setChangePassStatus(null);
 
     const currentSecret = getSecretPassword();
-    if (oldPassInput.trim() !== currentSecret && oldPassInput.trim() !== 'akram' && oldPassInput.trim() !== 'syed') {
+    if (oldPassInput.trim() !== currentSecret) {
       setChangePassStatus({ type: 'error', msg: 'Current password is incorrect!' });
       return;
     }
