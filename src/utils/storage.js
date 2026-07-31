@@ -57,14 +57,24 @@ export async function getMemoFromIDB(assetId) {
 }
 
 export async function deleteMemoFromIDB(assetId) {
+  if (!assetId) return true;
   try {
     const db = await openDB();
-    if (!db) return;
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    const store = tx.objectStore(STORE_NAME);
-    store.delete(assetId);
+    if (!db) return true;
+    return new Promise((resolve) => {
+      try {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.delete(assetId);
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => resolve(true);
+      } catch (err) {
+        resolve(true);
+      }
+    });
   } catch (e) {
-    console.warn('IndexedDB delete failed:', e);
+    console.warn('IndexedDB delete non-critical error:', e);
+    return true;
   }
 }
 

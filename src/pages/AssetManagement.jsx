@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { assetsData, employeesData } from '../data/mockData';
 import { saveAssetsToStorage, hydrateAssetsWithIDB, saveMemoToIDB } from '../utils/storage';
+import * as XLSX from 'xlsx';
 
 const AssetManagement = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -154,6 +155,51 @@ const AssetManagement = () => {
     };
 
     reader.readAsDataURL(file);
+  };
+
+  // Helper function to safely delete memo file from IndexedDB, LocalStorage, and component state
+  const handleMemoFileDelete = async (targetAsset) => {
+    if (!targetAsset) return;
+    const assetId = targetAsset.id;
+
+    try {
+      if (assetId) {
+        await deleteMemoFromIDB(assetId);
+      }
+    } catch (e) {
+      console.warn('IDB delete warning:', e);
+    }
+
+    const clearedAsset = {
+      ...targetAsset,
+      memoFile: '',
+      memoFileName: '',
+      memoUploadDate: ''
+    };
+
+    try {
+      if (editingAsset) {
+        setEditingAsset(clearedAsset);
+      }
+      if (viewingAsset) {
+        setViewingAsset(clearedAsset);
+      }
+
+      setAssets(prev => {
+        const updatedList = prev.map(a => (assetId && a.id === assetId) ? clearedAsset : a);
+        try {
+          saveAssetsToStorage(updatedList);
+        } catch (e) {
+          console.warn('LocalStorage save warning during delete:', e);
+        }
+        return updatedList;
+      });
+
+      showNotification('Attached memo file deleted successfully!');
+    } catch (err) {
+      console.error('Error in handleMemoFileDelete:', err);
+      showNotification('Attached memo file cleared!');
+    }
   };
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -427,6 +473,102 @@ const AssetManagement = () => {
     a.click();
   };
 
+  const exportAssetsToExcelCSV = (customList = null, exportLabel = 'All') => {
+    const assetList = customList || assets;
+    if (!assetList || assetList.length === 0) {
+      alert('No assets found to export.');
+      return;
+    }
+
+    try {
+      // Map every asset detail cleanly into formatted Excel row
+      const excelRows = assetList.map((a, idx) => ({
+        'S.No': idx + 1,
+        'Asset ID': a.id || '',
+        'Asset Code': a.assetCode || '',
+        'Asset Name': a.name || '',
+        'Category': a.category || '',
+        'Serial Number': a.serial ? String(a.serial) : '',
+        'Status': a.status || '',
+        'Assigned User': a.assignedTo || '',
+        'Assigned Email': a.assignedToEmail || '',
+        'Location': a.location || '',
+        'Processor': a.processor || '',
+        'RAM': a.ram || '',
+        'Storage': a.storage || '',
+        'Monitor Name': a.monitorName || '',
+        'Monitor Serial': a.monitorSerial ? String(a.monitorSerial) : '',
+        'Mouse Model': a.mouseModel || '',
+        'Mouse Serial': a.mouseSerial ? String(a.mouseSerial) : '',
+        'Keyboard Serial': a.keyboardSerial ? String(a.keyboardSerial) : '',
+        'Accessory Item': a.accessoryItem || '',
+        'Accessory Model': a.accessoryModel || '',
+        'Accessory Serial': a.accessorySerial ? String(a.accessorySerial) : '',
+        'OS': a.os || '',
+        'Installed Software': a.software || '',
+        'SIM ICCID / Serial': a.simNumber ? String(a.simNumber) : '',
+        'SIM Mobile Number': a.simPhoneNumber ? String(a.simPhoneNumber) : '',
+        'SIM Carrier': a.simCarrier || '',
+        'SIM Plan Details': a.simPlanDetails || '',
+        'Purchase Date': a.purchaseDate || '',
+        'Model Date': a.modelDate || '',
+        'Memo File Attached': a.memoFileName ? `Yes (${a.memoFileName})` : 'No'
+      }));
+
+      // Create sheet and workbook using XLSX
+      const worksheet = XLSX.utils.json_to_sheet(excelRows);
+
+      // Auto-fit column widths
+      const headers = Object.keys(excelRows[0]);
+      const colWidths = headers.map(key => {
+        let maxLen = key.length;
+        excelRows.forEach(row => {
+          const val = String(row[key] || '');
+          if (val.length > maxLen) maxLen = val.length;
+        });
+        return { wch: Math.min(Math.max(maxLen + 3, 10), 50) };
+      });
+      worksheet['!cols'] = colWidths;
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'IT Asset Inventory');
+
+      const dateStr = new Date().toISOString().split('T')[0];
+      const filename = `IT_Asset_Master_Inventory_${exportLabel}_${dateStr}.xlsx`;
+
+      XLSX.writeFile(workbook, filename);
+      showNotification(`Successfully exported ${assetList.length} assets to Excel spreadsheet (${filename})!`);
+    } catch (err) {
+      console.error('Error generating Excel export:', err);
+      // Fallback CSV generation if XLSX encounters any browser issue
+      const headers = [
+        'Asset ID', 'Asset Code', 'Asset Name', 'Category', 'Serial Number', 'Status',
+        'Assigned User', 'Assigned Email', 'Location', 'Processor', 'RAM', 'Storage',
+        'Monitor Name', 'Monitor Serial', 'Mouse Model', 'Mouse Serial', 'Keyboard Serial',
+        'Accessory Item', 'Accessory Model', 'Accessory Serial', 'OS', 'Installed Software',
+        'SIM ICCID', 'SIM Mobile Number', 'SIM Carrier', 'SIM Plan Details', 'Purchase Date', 'Model Date'
+      ];
+      const escapeCSV = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
+      const rows = assetList.map(a => [
+        escapeCSV(a.id), escapeCSV(a.assetCode), escapeCSV(a.name), escapeCSV(a.category), escapeCSV(a.serial), escapeCSV(a.status),
+        escapeCSV(a.assignedTo), escapeCSV(a.assignedToEmail), escapeCSV(a.location), escapeCSV(a.processor), escapeCSV(a.ram), escapeCSV(a.storage),
+        escapeCSV(a.monitorName), escapeCSV(a.monitorSerial), escapeCSV(a.mouseModel), escapeCSV(a.mouseSerial), escapeCSV(a.keyboardSerial),
+        escapeCSV(a.accessoryItem), escapeCSV(a.accessoryModel), escapeCSV(a.accessorySerial), escapeCSV(a.os), escapeCSV(a.software),
+        escapeCSV(a.simNumber), escapeCSV(a.simPhoneNumber), escapeCSV(a.simCarrier), escapeCSV(a.simPlanDetails), escapeCSV(a.purchaseDate), escapeCSV(a.modelDate)
+      ].join(','));
+      const csvContent = '\uFEFF' + [headers.map(h => `"${h}"`).join(','), ...rows].join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `IT_Assets_${exportLabel}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+  };
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -671,7 +813,6 @@ const AssetManagement = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-800">Asset Management</h2>
-          <p className="text-sm text-gray-500 mt-1">Manage IT assets, Desktops, Laptops, SIM Cards, and Cellular Data Plans</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
@@ -693,6 +834,14 @@ const AssetManagement = () => {
           >
             <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
             Bulk Import Assets (Excel/CSV)
+          </button>
+          <button
+            onClick={() => exportAssetsToExcelCSV(assets, 'All_Inventory')}
+            className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+            title="Download all assets in Excel / CSV format"
+          >
+            <Download className="w-4 h-4 text-emerald-700" />
+            Export Assets (Excel/CSV)
           </button>
           <button
             onClick={() => setIsAddModalOpen(true)}
@@ -862,6 +1011,16 @@ const AssetManagement = () => {
               Reset Filters
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => exportAssetsToExcelCSV(filteredAssets, 'Filtered_Inventory')}
+            className="px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer ml-auto"
+            title="Export currently visible assets to Excel / CSV"
+          >
+            <Download className="w-3.5 h-3.5 text-emerald-700" />
+            Export Excel ({filteredAssets.length})
+          </button>
         </div>
       </div>
 
@@ -1163,83 +1322,92 @@ const AssetManagement = () => {
                     'bg-amber-50 text-amber-700 border-amber-200'
                   }`}>
                     {viewingAsset.status}
-                  </span>
-                  <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5 font-medium">
-                    <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                    {viewingAsset.location || 'Bangalore'}
-                  </span>
-                </div>
-              </div>
-
-              {/* IT ASSET MEMO & SIGNED RESPONSIBILITY COPY CARD */}
-              <div className="bg-amber-50/70 p-5 rounded-xl shadow-xs border border-amber-200 space-y-3">
-                <div className="flex justify-between items-center pb-2 border-b border-amber-200/70">
-                  <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-amber-600" />
-                    IT ASSET HANDOVER MEMO & SIGNED RESPONSIBILITY COPY
-                  </h4>
-                  <span className="text-[11px] text-amber-800 font-bold bg-amber-100 px-2.5 py-0.5 rounded border border-amber-300">
-                    Employee Liability Signed Copy
-                  </span>
-                </div>
-
-                {viewingAsset.memoFile ? (
-                  <div className="bg-white p-4 rounded-xl border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2.5 bg-amber-100 text-amber-800 rounded-lg">
-                        <FileText className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <span className="font-bold text-gray-900 text-xs block truncate max-w-xs sm:max-w-md">
-                          {viewingAsset.memoFileName || 'IT Asset memo.docx'}
-                        </span>
-                        <span className="text-[11px] text-gray-500 font-mono">
-                          Uploaded: {viewingAsset.memoUploadDate || '2026-07-26'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPreviewTabMode('document');
-                          setPreviewMemoFile({ url: viewingAsset.memoFile, name: viewingAsset.memoFileName, asset: viewingAsset });
-                        }}
-                        className="px-3.5 py-2 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
-                      >
-                        <Eye className="w-3.5 h-3.5 text-amber-700" />
-                        Preview Online
-                      </button>
-                      <a
-                        href={viewingAsset.memoFile}
-                        download={viewingAsset.memoFileName || `Signed_Asset_Memo_${viewingAsset.id}.pdf`}
-                        className="px-3.5 py-2 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        Download Copy
-                      </a>
-                      <label className="px-3 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs">
-                        <Upload className="w-3.5 h-3.5" />
-                        Replace
-                        <input
-                          type="file"
-                          accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files[0];
-                            if (!file) return;
-                            handleMemoFileUpload(file, viewingAsset, (updated) => {
-                              setViewingAsset(updated);
-                              setAssets(prev => prev.map(a => a.id === updated.id ? updated : a));
-                            });
-                            e.target.value = '';
-                          }}
-                        />
-                      </label>
+                      </span>
+                      <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5 font-medium">
+                        <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                        {viewingAsset.location || 'Bangalore'}
+                      </span>
                     </div>
                   </div>
-                ) : (
+
+                  {/* IT ASSET MEMO & SIGNED RESPONSIBILITY COPY CARD */}
+                  <div className="bg-amber-50/70 p-5 rounded-xl shadow-xs border border-amber-200 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-amber-200/70">
+                      <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-amber-600 shrink-0" />
+                        IT ASSET HANDOVER MEMO & SIGNED RESPONSIBILITY COPY
+                      </h4>
+                      <span className="text-[11px] text-amber-800 font-bold bg-amber-100 px-2.5 py-0.5 rounded border border-amber-300 self-start sm:self-auto whitespace-nowrap">
+                        Employee Liability Signed Copy
+                      </span>
+                    </div>
+
+                    {viewingAsset.memoFile ? (
+                      <div className="bg-white p-4 rounded-xl border border-amber-200 flex flex-col xl:flex-row xl:items-center justify-between gap-4 shadow-2xs">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="p-2.5 bg-amber-100 text-amber-800 rounded-lg shrink-0">
+                            <FileText className="w-6 h-6" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-bold text-gray-900 text-xs block truncate" title={viewingAsset.memoFileName || 'IT Asset memo.docx'}>
+                              {viewingAsset.memoFileName || 'IT Asset memo.docx'}
+                            </span>
+                            <span className="text-[11px] text-gray-500 font-mono whitespace-nowrap block mt-0.5">
+                              Uploaded: {viewingAsset.memoUploadDate || '2026-07-26'}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-wrap shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewTabMode('document');
+                              setPreviewMemoFile({ url: viewingAsset.memoFile, name: viewingAsset.memoFileName || 'Memo.pdf', asset: viewingAsset });
+                            }}
+                            className="px-3 py-1.5 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs whitespace-nowrap cursor-pointer"
+                          >
+                            <Eye className="w-3.5 h-3.5 text-amber-700" />
+                            Preview
+                          </button>
+                          <a
+                            href={viewingAsset.memoFile}
+                            download={viewingAsset.memoFileName || `Signed_Asset_Memo_${viewingAsset.id}.pdf`}
+                            className="px-3 py-1.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            Download
+                          </a>
+                          <label className="px-3 py-1.5 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs whitespace-nowrap">
+                            <Upload className="w-3.5 h-3.5" />
+                            Replace
+                            <input
+                              type="file"
+                              accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (!file) return;
+                                handleMemoFileUpload(file, viewingAsset, (updated) => {
+                                  setViewingAsset(updated);
+                                  setAssets(prev => prev.map(a => a.id === updated.id ? updated : a));
+                                });
+                                e.target.value = '';
+                              }}
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => handleMemoFileDelete(viewingAsset)}
+                            className="px-3 py-1.5 text-xs font-extrabold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs whitespace-nowrap"
+                            title="Delete attached memo file completely"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
                   <div className="bg-white/90 p-4 rounded-xl border border-dashed border-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                     <div>
                       <span className="text-xs font-bold text-gray-800 block">No Signed Memo Attached Yet</span>
@@ -1943,15 +2111,15 @@ const AssetManagement = () => {
                     Attach Word / PDF Memo
                   </label>
                   <span className="text-xs text-gray-700 font-mono truncate flex-1 font-semibold">
-                    {newAsset.memoFileName ? newAsset.memoFileName : 'No file selected (Word, PDF, JPG)'}
+                    {newAsset.memoFileName ? newAsset.memoFileName : (newAsset.memoFile ? 'Attached Signed Memo' : 'No file selected (Word, PDF, JPG)')}
                   </span>
-                  {newAsset.memoFileName && (
+                  {(newAsset.memoFileName || newAsset.memoFile) && (
                     <div className="flex items-center gap-2">
                       {newAsset.memoFile && (
                         <>
                           <button
                             type="button"
-                            onClick={() => setPreviewMemoFile({ url: newAsset.memoFile, name: newAsset.memoFileName, asset: newAsset })}
+                            onClick={() => setPreviewMemoFile({ url: newAsset.memoFile, name: newAsset.memoFileName || 'Memo.pdf', asset: newAsset })}
                             className="px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-md flex items-center gap-1 transition-colors cursor-pointer"
                             title="Preview document on screen"
                           >
@@ -1960,7 +2128,7 @@ const AssetManagement = () => {
                           </button>
                           <a
                             href={newAsset.memoFile}
-                            download={newAsset.memoFileName}
+                            download={newAsset.memoFileName || 'Memo.pdf'}
                             className="px-2.5 py-1 text-xs font-bold text-amber-800 bg-white hover:bg-amber-50 border border-amber-300 rounded-md flex items-center gap-1 transition-colors cursor-pointer"
                             title="Download file to computer"
                           >
@@ -1972,9 +2140,11 @@ const AssetManagement = () => {
                       <button
                         type="button"
                         onClick={() => setNewAsset(prev => ({ ...prev, memoFile: '', memoFileName: '', memoUploadDate: '' }))}
-                        className="text-red-500 hover:text-red-700 text-xs font-bold px-1 cursor-pointer"
+                        className="px-2.5 py-1 text-xs font-extrabold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 rounded-md transition-colors cursor-pointer flex items-center gap-1"
+                        title="Delete attached file"
                       >
-                        &times; Remove
+                        <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                        Delete File
                       </button>
                     </div>
                   )}
@@ -2416,9 +2586,9 @@ const AssetManagement = () => {
                     Attach Word / PDF Memo
                   </label>
                   <span className="text-xs text-gray-700 font-mono truncate flex-1 font-semibold">
-                    {editingAsset.memoFileName ? editingAsset.memoFileName : 'IT Asset memo.docx'}
+                    {editingAsset.memoFileName ? editingAsset.memoFileName : (editingAsset.memoFile ? 'Attached Signed Memo' : 'No memo file attached')}
                   </span>
-                  {editingAsset.memoFileName && (
+                  {(editingAsset.memoFileName || editingAsset.memoFile) && (
                     <div className="flex items-center gap-2">
                       {editingAsset.memoFile && (
                         <>
@@ -2426,7 +2596,7 @@ const AssetManagement = () => {
                             type="button"
                             onClick={() => {
                               setPreviewTabMode('document');
-                              setPreviewMemoFile({ url: editingAsset.memoFile, name: editingAsset.memoFileName, asset: editingAsset });
+                              setPreviewMemoFile({ url: editingAsset.memoFile, name: editingAsset.memoFileName || 'Memo.pdf', asset: editingAsset });
                             }}
                             className="px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-md flex items-center gap-1 transition-colors cursor-pointer"
                             title="Preview document on screen"
@@ -2436,7 +2606,7 @@ const AssetManagement = () => {
                           </button>
                           <a
                             href={editingAsset.memoFile}
-                            download={editingAsset.memoFileName}
+                            download={editingAsset.memoFileName || `Signed_Asset_Memo_${editingAsset.id}.pdf`}
                             className="px-2.5 py-1 text-xs font-bold text-amber-800 bg-white hover:bg-amber-50 border border-amber-300 rounded-md flex items-center gap-1 transition-colors cursor-pointer"
                             title="Download file to computer"
                           >
@@ -2447,16 +2617,8 @@ const AssetManagement = () => {
                       )}
                       <button
                         type="button"
-                        onClick={async () => {
-                          if (editingAsset && editingAsset.id) {
-                            await deleteMemoFromIDB(editingAsset.id);
-                          }
-                          const cleared = { ...editingAsset, memoFile: '', memoFileName: '', memoUploadDate: '' };
-                          setEditingAsset(cleared);
-                          setAssets(prev => prev.map(a => a.id === editingAsset.id ? cleared : a));
-                          showNotification('Attached memo file deleted successfully!');
-                        }}
-                        className="px-2 py-1 text-xs font-extrabold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 rounded-md transition-colors cursor-pointer flex items-center gap-1"
+                        onClick={() => handleMemoFileDelete(editingAsset)}
+                        className="px-2.5 py-1 text-xs font-extrabold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 rounded-md transition-colors cursor-pointer flex items-center gap-1"
                         title="Delete attached file completely"
                       >
                         <Trash2 className="w-3.5 h-3.5 text-red-600" />
@@ -2754,14 +2916,24 @@ const AssetManagement = () => {
                       </h4>
                       <p className="text-gray-600 mt-1">Upload multiple IT assets, hardware serials, and SIM cards in one single click.</p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={downloadSampleCSV}
-                      className="px-3 py-2 text-xs font-semibold text-blue-700 bg-white border border-blue-200 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs whitespace-nowrap cursor-pointer"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      Download Sample CSV Template
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => exportAssetsToExcelCSV(assets, 'All_Inventory')}
+                        className="px-3 py-2 text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 hover:bg-emerald-200 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs whitespace-nowrap cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Export All Assets ({assets.length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={downloadSampleCSV}
+                        className="px-3 py-2 text-xs font-semibold text-blue-700 bg-white border border-blue-200 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs whitespace-nowrap cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Sample CSV Template
+                      </button>
+                    </div>
                   </div>
 
                   {/* Drag and drop file picker */}
