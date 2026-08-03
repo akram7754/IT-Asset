@@ -22,6 +22,47 @@ const AssetManagement = () => {
   const [itemsPerPage, setItemsPerPage] = useState('25');
   const [showAssetHistoryInDetails, setShowAssetHistoryInDetails] = useState(false);
   const [assetToDelete, setAssetToDelete] = useState(null);
+  const [selectedAssetIds, setSelectedAssetIds] = useState([]);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
+
+  const toggleSelectAsset = (id) => {
+    setSelectedAssetIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedAssetIds.length === filteredAssets.length && filteredAssets.length > 0) {
+      setSelectedAssetIds([]);
+    } else {
+      setSelectedAssetIds(filteredAssets.map(a => a.id));
+    }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedAssetIds.length === 0) return;
+    const updated = assets.filter(a => !selectedAssetIds.includes(a.id));
+    setAssets(updated);
+    saveAssetsToStorage(updated);
+    const deletedList = JSON.parse(localStorage.getItem('itam_deleted_asset_ids') || '[]');
+    const newDeletedList = Array.from(new Set([...deletedList, ...selectedAssetIds]));
+    localStorage.setItem('itam_deleted_asset_ids', JSON.stringify(newDeletedList));
+    setSelectedAssetIds([]);
+    showToast(`Successfully deleted ${selectedAssetIds.length} selected asset(s).`);
+  };
+
+  const handleDeleteAllAssets = () => {
+    const allIds = assets.map(a => a.id);
+    setAssets([]);
+    saveAssetsToStorage([]);
+    const deletedList = JSON.parse(localStorage.getItem('itam_deleted_asset_ids') || '[]');
+    const newDeletedList = Array.from(new Set([...deletedList, ...allIds]));
+    localStorage.setItem('itam_deleted_asset_ids', JSON.stringify(newDeletedList));
+    setSelectedAssetIds([]);
+    setIsDeleteAllModalOpen(false);
+    showToast('All assets have been deleted successfully. You can now import fresh data.');
+  };
+
   const [assets, setAssets] = useState(() => {
     if (!localStorage.getItem('itam_clean_reset_v10')) {
       localStorage.removeItem('itam_assets');
@@ -836,6 +877,14 @@ const AssetManagement = () => {
             Export Assets (Excel/CSV)
           </button>
           <button
+            onClick={() => setIsDeleteAllModalOpen(true)}
+            className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+            title="Delete all assets from inventory in one click"
+          >
+            <Trash2 className="w-4 h-4 text-rose-600" />
+            Delete All Assets
+          </button>
+          <button
             onClick={() => setIsAddModalOpen(true)}
             className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary-dark transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
           >
@@ -1016,12 +1065,57 @@ const AssetManagement = () => {
         </div>
       </div>
 
+      {/* BULK SELECTION ACTION BAR */}
+      {selectedAssetIds.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl flex items-center justify-between shadow-sm my-2">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center justify-center bg-amber-600 text-white text-xs font-extrabold px-3 py-1 rounded-full">
+              {selectedAssetIds.length} Selected
+            </span>
+            <span className="text-xs font-semibold text-amber-900">
+              You have selected {selectedAssetIds.length} asset(s) from the list.
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => exportAssetsToExcelCSV(assets.filter(a => selectedAssetIds.includes(a.id)), 'Selected_Assets')}
+              className="px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 rounded-lg border border-emerald-300 flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Export Selected ({selectedAssetIds.length})
+            </button>
+            <button
+              onClick={handleBulkDelete}
+              className="px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Delete Selected ({selectedAssetIds.length})
+            </button>
+            <button
+              onClick={() => setSelectedAssetIds([])}
+              className="px-3 py-1.5 text-xs font-bold text-gray-600 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg transition-colors cursor-pointer"
+            >
+              Deselect All
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* CLEAN & SLEEK ASSETS TABLE */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto min-h-[400px]">
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-100">
               <tr>
+                <th scope="col" className="px-4 py-4 w-10 text-center">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary cursor-pointer"
+                    checked={selectedAssetIds.length === filteredAssets.length && filteredAssets.length > 0}
+                    onChange={toggleSelectAll}
+                    title="Select All Assets"
+                  />
+                </th>
                 <th scope="col" className="px-6 py-4 font-semibold">Asset Info</th>
                 <th scope="col" className="px-6 py-4 font-semibold">Serial Number</th>
                 <th scope="col" className="px-6 py-4 font-semibold">Category</th>
@@ -1036,8 +1130,18 @@ const AssetManagement = () => {
                 <tr 
                   key={asset.id} 
                   onClick={() => setViewingAsset(asset)}
-                  className="bg-white border-b border-gray-50 hover:bg-blue-50/60 transition-colors cursor-pointer group"
+                  className={`border-b border-gray-50 hover:bg-blue-50/60 transition-colors cursor-pointer group ${
+                    selectedAssetIds.includes(asset.id) ? 'bg-amber-50/50' : 'bg-white'
+                  }`}
                 >
+                  <td className="px-4 py-4 w-10 text-center" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary cursor-pointer"
+                      checked={selectedAssetIds.includes(asset.id)}
+                      onChange={() => toggleSelectAsset(asset.id)}
+                    />
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="font-bold text-gray-900 flex items-center gap-2 group-hover:text-primary transition-colors">
@@ -3716,6 +3820,42 @@ const AssetManagement = () => {
                 >
                   <Trash2 className="w-4 h-4" />
                   Yes, Delete Asset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* DELETE ALL ASSETS CONFIRMATION MODAL */}
+      {isDeleteAllModalOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[110] p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-rose-100 animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center space-y-4">
+              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto border border-rose-200 shadow-inner">
+                <Trash2 className="w-7 h-7 text-rose-600" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-extrabold text-gray-900">Delete All Assets?</h3>
+                <p className="text-xs text-gray-600">
+                  Are you sure you want to permanently delete all <strong className="text-rose-700">{assets.length} assets</strong> from your inventory?
+                </p>
+                <p className="text-[11px] text-rose-500 font-semibold pt-1">This operation will clear your entire asset database so you can upload fresh data.</p>
+              </div>
+              <div className="pt-2 flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteAllModalOpen(false)}
+                  className="px-4 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteAllAssets}
+                  className="px-5 py-2 text-xs font-extrabold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Yes, Delete All ({assets.length})
                 </button>
               </div>
             </div>
