@@ -64,14 +64,14 @@ const AssetManagement = () => {
   };
 
   const [assets, setAssets] = useState(() => {
-    if (!localStorage.getItem('itam_clean_reset_v10')) {
+    if (!localStorage.getItem('itam_excel_imported_v11')) {
       localStorage.removeItem('itam_assets');
       localStorage.removeItem('itam_assets_v4');
       localStorage.removeItem('itam_assets_backup');
       localStorage.removeItem('itam_deleted_asset_ids');
-      localStorage.setItem('itam_assets', JSON.stringify([]));
-      localStorage.setItem('itam_clean_reset_v10', 'true');
-      return [];
+      localStorage.setItem('itam_assets', JSON.stringify(assetsData));
+      localStorage.setItem('itam_excel_imported_v11', 'true');
+      return assetsData;
     }
 
     const saved = localStorage.getItem('itam_assets');
