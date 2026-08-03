@@ -14,6 +14,8 @@ import {
   ShoppingBag,
   Cpu
 } from 'lucide-react';
+import clsx from 'clsx';
+
 const Sidebar = ({ isMobileMenuOpen, onCloseMobileMenu }) => {
   const userRole = (() => {
     try { return localStorage.getItem('itam_user_role') || 'IT Administrator'; } catch (e) { return 'IT Administrator'; }
