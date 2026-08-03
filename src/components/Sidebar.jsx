@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import tresconLogo from '../assets/trescon-logo.png';
 import {
   LayoutDashboard,
   Monitor,
@@ -19,7 +20,7 @@ const Sidebar = ({ isMobileMenuOpen, onCloseMobileMenu }) => {
   const navItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Assets', path: '/assets', icon: Monitor },
-    { name: 'Vendors', path: '/vendors', icon: Briefcase },
+    { name: 'Vendors', path: '/vendors', icon: ShoppingBag },
     { name: 'Employees', path: '/employees', icon: Users },
     { name: 'Maintenance', path: '/maintenance', icon: Wrench },
     { name: 'Reports', path: '/reports', icon: FileBarChart },
@@ -31,7 +32,7 @@ const Sidebar = ({ isMobileMenuOpen, onCloseMobileMenu }) => {
       <div className="flex items-center justify-between h-20 border-b border-[#008689] px-4">
         <div className="flex items-center gap-2.5">
           <div className="bg-white p-1.5 rounded-xl shadow-md border border-white/30 flex items-center justify-center">
-            <img src="./trescon-logo.png" alt="Trescon 10 Years Logo" className="h-8 w-auto object-contain" />
+            <img src={tresconLogo} alt="Trescon 10 Years Logo" className="h-8 w-auto object-contain" />
           </div>
           <div>
             <h1 className="text-sm font-extrabold tracking-wider text-white leading-tight">Trescon</h1>

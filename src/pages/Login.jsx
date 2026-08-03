@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Monitor, Lock, Mail, ArrowRight, ShieldCheck, KeyRound, Check, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import tresconLogo from '../assets/trescon-logo.png';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ const Login = () => {
         {/* Brand & Portal Header */}
         <div className="flex flex-col items-center text-center">
           <div className="bg-white p-2.5 rounded-2xl shadow-lg border border-gray-100 mb-3 flex items-center justify-center">
-            <img src="./trescon-logo.png" alt="10 Years Trescon Logo" className="h-16 w-auto object-contain" />
+            <img src={tresconLogo} alt="10 Years Trescon Logo" className="h-16 w-auto object-contain" />
           </div>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
             Akram's IT Asset Portal
