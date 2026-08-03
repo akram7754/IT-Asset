@@ -23,34 +23,26 @@ const AssetManagement = () => {
   const [showAssetHistoryInDetails, setShowAssetHistoryInDetails] = useState(false);
   const [assetToDelete, setAssetToDelete] = useState(null);
   const [assets, setAssets] = useState(() => {
-    const deletedIds = new Set((() => {
-      try { return JSON.parse(localStorage.getItem('itam_deleted_asset_ids') || '[]'); } catch (e) { return []; }
-    })());
+    if (!localStorage.getItem('itam_clean_reset_v10')) {
+      localStorage.removeItem('itam_assets');
+      localStorage.removeItem('itam_assets_v4');
+      localStorage.removeItem('itam_assets_backup');
+      localStorage.removeItem('itam_deleted_asset_ids');
+      localStorage.setItem('itam_assets', JSON.stringify([]));
+      localStorage.setItem('itam_clean_reset_v10', 'true');
+      return [];
+    }
 
     const saved = localStorage.getItem('itam_assets');
-    let loadedArr = [];
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) loadedArr = parsed;
+        if (Array.isArray(parsed)) return parsed;
       } catch (e) {
         console.error('Failed to parse saved assets:', e);
       }
     }
-
-    if (loadedArr.length === 0) {
-      loadedArr = assetsData;
-    } else {
-      // Merge in any missing master assets that haven't been explicitly deleted
-      const existingIds = new Set(loadedArr.map(a => a.id));
-      for (const item of assetsData) {
-        if (!existingIds.has(item.id) && !deletedIds.has(item.id)) {
-          loadedArr.push(item);
-        }
-      }
-    }
-
-    return loadedArr.filter(a => !deletedIds.has(a.id));
+    return assetsData;
   });
 
   // Safely persist assets into LocalStorage & IndexedDB across primary and backup keys

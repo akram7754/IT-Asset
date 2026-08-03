@@ -19,6 +19,16 @@ const Dashboard = () => {
 
   // Dynamic assets from localStorage or default mock data
   const currentAssets = (() => {
+    if (!localStorage.getItem('itam_clean_reset_v10')) {
+      localStorage.removeItem('itam_assets');
+      localStorage.removeItem('itam_assets_v4');
+      localStorage.removeItem('itam_assets_backup');
+      localStorage.removeItem('itam_deleted_asset_ids');
+      localStorage.setItem('itam_assets', JSON.stringify([]));
+      localStorage.setItem('itam_clean_reset_v10', 'true');
+      return [];
+    }
+
     const saved = localStorage.getItem('itam_assets');
     if (saved) {
       try {
