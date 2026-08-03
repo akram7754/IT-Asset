@@ -11,76 +11,7 @@ import { vendorsData as initialVendorsData } from '../data/mockData';
 const VENDORS_KEY = 'itam_vendors_table_v4';
 
 // Default Vendors Data with Laptop Name & Serial Number
-const defaultVendors = [
-  {
-    id: 'VND-001',
-    date: '2026-02-05',
-    user: 'Syed',
-    laptopName: 'Lenovo ThinkPad X1',
-    laptopSerial: 'LNV-SYD-9981',
-    category: 'Lenovo Laptop Display Change',
-    name: 'Skyeagle Technologies',
-    price: '8,529',
-    invoice: 'STI/2025-26/0085',
-    invoiceFileName: 'STI_2025_26_0085_Display_Invoice.pdf',
-    contact: 'Syed',
-    email: 'syed@skyeagle.com',
-    phone: '+91 9876543210',
-    address: 'Bangalore, India',
-    status: 'Active'
-  },
-  {
-    id: 'VND-002',
-    date: '2025-11-12',
-    user: 'Syed',
-    laptopName: 'Lenovo ThinkPad X1',
-    laptopSerial: 'LNV-SYD-9981',
-    category: 'Battery Replacement & Power IC Repair',
-    name: 'Skyeagle Technologies',
-    price: '3,921',
-    invoice: 'STI/2025-26/0012',
-    invoiceFileName: 'Syed_Battery_Repair_Bill.pdf',
-    contact: 'Syed',
-    email: 'syed@skyeagle.com',
-    phone: '+91 9876543210',
-    address: 'Bangalore, India',
-    status: 'Active'
-  },
-  {
-    id: 'VND-003',
-    date: '2026-01-15',
-    user: 'Charan',
-    laptopName: 'Dell Latitude 3480',
-    laptopSerial: 'DEL-CHR-1092',
-    category: 'Hardware Supplier',
-    name: 'Dell Technologies',
-    price: '1,250',
-    invoice: 'INV-DELL-8821',
-    invoiceFileName: 'Dell_Tax_Invoice_2026.pdf',
-    contact: 'Alex Rivera',
-    email: 'alex@dell-partners.com',
-    phone: '+1 (800) 123-4567',
-    address: 'Bangalore, India',
-    status: 'Active'
-  },
-  {
-    id: 'VND-004',
-    date: '2026-02-01',
-    user: 'Sam Chen',
-    laptopName: 'MacBook Pro 16"',
-    laptopSerial: 'C02YK1234',
-    category: 'Laptop Supplier',
-    name: 'Apple Enterprise',
-    price: '2,400',
-    invoice: 'INV-APP-7712',
-    invoiceFileName: 'Apple_Corporate_Invoice.pdf',
-    contact: 'Sam Chen',
-    email: 'sam.c@apple-ent.com',
-    phone: '+1 (800) 234-5678',
-    address: 'Cupertino, CA, USA',
-    status: 'Active'
-  }
-];
+const defaultVendors = [];
 
 const VendorManagement = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -91,36 +22,59 @@ const VendorManagement = () => {
 
   const [vendorToDelete, setVendorToDelete] = useState(null);
 
+  const [selectedVendorIds, setSelectedVendorIds] = useState([]);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
+
+  const toggleSelectVendor = (id) => {
+    setSelectedVendorIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedVendorIds.length === filteredVendors.length && filteredVendors.length > 0) {
+      setSelectedVendorIds([]);
+    } else {
+      setSelectedVendorIds(filteredVendors.map(v => v.id));
+    }
+  };
+
+  const handleBulkDeleteVendors = () => {
+    if (selectedVendorIds.length === 0) return;
+    const updated = vendors.filter(v => !selectedVendorIds.includes(v.id));
+    setVendors(updated);
+    setSelectedVendorIds([]);
+  };
+
+  const handleDeleteAllVendors = () => {
+    setVendors([]);
+    setSelectedVendorIds([]);
+    setIsDeleteAllModalOpen(false);
+  };
+
   // Comprehensive Vendor Data Load (Checks persistent deleted IDs & user saved state)
   const [vendors, setVendors] = useState(() => {
-    const deletedIds = new Set((() => {
-      try { return JSON.parse(localStorage.getItem('itam_deleted_vendor_ids') || '[]'); } catch (e) { return []; }
-    })());
+    if (!localStorage.getItem('itam_clean_vendors_reset_v10')) {
+      localStorage.removeItem('itam_vendors_table_v4');
+      localStorage.removeItem('itam_vendors');
+      localStorage.removeItem('itam_vendors_backup');
+      localStorage.removeItem('itam_deleted_vendor_ids');
+      localStorage.setItem('itam_vendors_table_v4', JSON.stringify([]));
+      localStorage.setItem('itam_vendors_initialized', 'true');
+      localStorage.setItem('itam_clean_vendors_reset_v10', 'true');
+      return [];
+    }
 
-    const isInitialized = localStorage.getItem('itam_vendors_initialized') === 'true';
-    let loadedArr = null;
-
-    try {
-      const saved = localStorage.getItem('itam_vendors_table_v4') || localStorage.getItem('itam_vendors');
-      if (saved) {
+    const saved = localStorage.getItem('itam_vendors_table_v4') || localStorage.getItem('itam_vendors');
+    if (saved) {
+      try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          loadedArr = parsed;
-        }
-      }
-    } catch (e) {
-      console.warn('Failed to load vendors:', e);
-    }
-
-    if (loadedArr === null) {
-      if (isInitialized) {
-        loadedArr = [];
-      } else {
-        loadedArr = defaultVendors;
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {
+        console.warn('Failed to load vendors:', e);
       }
     }
-
-    return loadedArr.filter(v => v && typeof v === 'object' && !deletedIds.has(v.id));
+    return defaultVendors;
   });
 
   // UI Modal States
@@ -441,13 +395,59 @@ const VendorManagement = () => {
                 className="w-full py-1.5 pl-9 pr-3 text-xs border border-gray-300 rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-primary shadow-2xs"
               />
             </div>
+            <button
+              onClick={() => setIsDeleteAllModalOpen(true)}
+              className="flex items-center justify-center px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-all shadow-2xs gap-1.5 active:scale-95 cursor-pointer"
+              title="Delete all vendor bill records"
+            >
+              <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+              Delete All Bills
+            </button>
           </div>
         </div>
+
+        {/* BULK SELECTION ACTION BAR */}
+        {selectedVendorIds.length > 0 && (
+          <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl flex items-center justify-between shadow-sm m-3">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center justify-center bg-amber-600 text-white text-xs font-extrabold px-3 py-1 rounded-full">
+                {selectedVendorIds.length} Selected
+              </span>
+              <span className="text-xs font-semibold text-amber-900">
+                You have selected {selectedVendorIds.length} vendor bill record(s).
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleBulkDeleteVendors}
+                className="px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Delete Selected ({selectedVendorIds.length})
+              </button>
+              <button
+                onClick={() => setSelectedVendorIds([])}
+                className="px-3 py-1.5 text-xs font-bold text-gray-600 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg transition-colors cursor-pointer"
+              >
+                Deselect All
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-gray-600">
             <thead className="text-[11px] text-gray-700 uppercase bg-gray-100/70 border-b border-gray-200 font-bold tracking-wider">
               <tr>
+                <th scope="col" className="px-3 py-3.5 w-10 text-center">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary cursor-pointer"
+                    checked={selectedVendorIds.length === filteredVendors.length && filteredVendors.length > 0}
+                    onChange={toggleSelectAll}
+                    title="Select All Vendor Records"
+                  />
+                </th>
                 <th scope="col" className="px-4 py-3.5 whitespace-nowrap">Date</th>
                 <th scope="col" className="px-4 py-3.5 whitespace-nowrap">User</th>
                 <th scope="col" className="px-5 py-3.5 whitespace-nowrap">Laptop Name / Serial Number</th>
@@ -461,7 +461,18 @@ const VendorManagement = () => {
             <tbody className="divide-y divide-gray-100 bg-white">
               {currentVendors.length > 0 ? (
                 currentVendors.map((vendor, idx) => (
-                  <tr key={vendor.id ? `${vendor.id}-${idx}` : idx} className="hover:bg-blue-50/30 transition-colors">
+                  <tr 
+                    key={vendor.id ? `${vendor.id}-${idx}` : idx} 
+                    className={`transition-colors ${selectedVendorIds.includes(vendor.id) ? 'bg-amber-50/50' : 'hover:bg-blue-50/30'}`}
+                  >
+                    <td className="px-3 py-3.5 w-10 text-center">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary cursor-pointer"
+                        checked={selectedVendorIds.includes(vendor.id)}
+                        onChange={() => toggleSelectVendor(vendor.id)}
+                      />
+                    </td>
                     {/* 1. Date */}
                     <td className="px-4 py-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-1.5 font-mono text-gray-800 font-bold">
@@ -1210,6 +1221,42 @@ const VendorManagement = () => {
                 >
                   <Trash2 className="w-4 h-4" />
                   Yes, Delete Record
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* DELETE ALL VENDORS CONFIRMATION MODAL */}
+      {isDeleteAllModalOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[110] p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-rose-100 animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center space-y-4">
+              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto border border-rose-200 shadow-inner">
+                <Trash2 className="w-7 h-7 text-rose-600" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-extrabold text-gray-900">Delete All Vendor Bills?</h3>
+                <p className="text-xs text-gray-600">
+                  Are you sure you want to permanently delete all <strong className="text-rose-700">{vendors.length} vendor bill records</strong>?
+                </p>
+                <p className="text-[11px] text-rose-500 font-semibold pt-1">This operation will clear your entire vendor bill catalog so you can upload fresh data.</p>
+              </div>
+              <div className="pt-2 flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteAllModalOpen(false)}
+                  className="px-4 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteAllVendors}
+                  className="px-5 py-2 text-xs font-extrabold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Yes, Delete All ({vendors.length})
                 </button>
               </div>
             </div>

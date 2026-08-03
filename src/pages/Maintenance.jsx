@@ -15,40 +15,62 @@ const Maintenance = () => {
 
   // Persistent Maintenance Tasks State
   const [tasks, setTasks] = useState(() => {
-    const deletedIds = new Set((() => {
-      try { return JSON.parse(localStorage.getItem('itam_deleted_maintenance_ids') || '[]'); } catch (e) { return []; }
-    })());
+    if (!localStorage.getItem('itam_clean_mnt_reset_v10')) {
+      localStorage.removeItem('itam_maintenance_tasks');
+      localStorage.removeItem('itam_deleted_maintenance_ids');
+      localStorage.setItem('itam_maintenance_tasks', JSON.stringify([]));
+      localStorage.setItem('itam_maintenance_initialized', 'true');
+      localStorage.setItem('itam_clean_mnt_reset_v10', 'true');
+      return [];
+    }
 
-    const isInitialized = localStorage.getItem('itam_maintenance_initialized') === 'true';
-    let loadedArr = null;
-
-    try {
-      const saved = localStorage.getItem('itam_maintenance_tasks');
-      if (saved) {
+    const saved = localStorage.getItem('itam_maintenance_tasks');
+    if (saved) {
+      try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          loadedArr = parsed;
-        }
-      }
-    } catch (e) {
-      console.error('Failed to parse saved maintenance tasks:', e);
-    }
-
-    if (loadedArr === null) {
-      if (isInitialized) {
-        loadedArr = [];
-      } else {
-        loadedArr = maintenanceTasksData;
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {
+        console.error('Failed to parse saved maintenance tasks:', e);
       }
     }
-
-    return loadedArr.filter(t => t && typeof t === 'object' && !deletedIds.has(t.id));
+    return [];
   });
 
   // Modal States
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [taskToDelete, setTaskToDelete] = useState(null);
+  const [selectedTaskIds, setSelectedTaskIds] = useState([]);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
+
+  const toggleSelectTask = (id) => {
+    setSelectedTaskIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAllTasks = (filteredList) => {
+    if (selectedTaskIds.length === filteredList.length && filteredList.length > 0) {
+      setSelectedTaskIds([]);
+    } else {
+      setSelectedTaskIds(filteredList.map(t => t.id));
+    }
+  };
+
+  const handleBulkDeleteTasks = () => {
+    if (selectedTaskIds.length === 0) return;
+    const updated = tasks.filter(t => !selectedTaskIds.includes(t.id));
+    setTasks(updated);
+    setSelectedTaskIds([]);
+    showToast(`Successfully deleted ${selectedTaskIds.length} maintenance ticket(s).`);
+  };
+
+  const handleDeleteAllTasks = () => {
+    setTasks([]);
+    setSelectedTaskIds([]);
+    setIsDeleteAllModalOpen(false);
+    showToast('All maintenance tickets deleted successfully.');
+  };
 
   // Form Initial State for New Ticket
   const initialTicketForm = {
@@ -183,19 +205,29 @@ const Maintenance = () => {
             Track asset maintenance schedules, laptop repair logs, vendor tickets, and problem history
           </p>
         </div>
-        <button
-          onClick={() => {
-            setNewTicket({
-              ...initialTicketForm,
-              id: `MNT-${200 + tasks.length + 1}`
-            });
-            setIsAddModalOpen(true);
-          }}
-          className="flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-primary hover:bg-primary-dark rounded-xl transition-all shadow-md gap-2 cursor-pointer active:scale-95 whitespace-nowrap"
-        >
-          <Plus className="w-4 h-4" />
-          Create Ticket
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsDeleteAllModalOpen(true)}
+            className="flex items-center justify-center px-3.5 py-2.5 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-all shadow-xs gap-1.5 cursor-pointer active:scale-95 whitespace-nowrap"
+            title="Delete all maintenance tickets"
+          >
+            <Trash2 className="w-4 h-4 text-rose-600" />
+            Delete All Tickets
+          </button>
+          <button
+            onClick={() => {
+              setNewTicket({
+                ...initialTicketForm,
+                id: `MNT-${200 + tasks.length + 1}`
+              });
+              setIsAddModalOpen(true);
+            }}
+            className="flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-primary hover:bg-primary-dark rounded-xl transition-all shadow-md gap-2 cursor-pointer active:scale-95 whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4" />
+            Create Ticket
+          </button>
+        </div>
       </div>
 
       {/* Dynamic KPI Cards */}
@@ -630,7 +662,42 @@ const Maintenance = () => {
           </div>
         </div>
       )}
-
+      {/* DELETE ALL TICKETS CONFIRMATION MODAL */}
+      {isDeleteAllModalOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[110] p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-rose-100 animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center space-y-4">
+              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto border border-rose-200 shadow-inner">
+                <Trash2 className="w-7 h-7 text-rose-600" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-extrabold text-gray-900">Delete All Maintenance Tickets?</h3>
+                <p className="text-xs text-gray-600">
+                  Are you sure you want to permanently delete all <strong className="text-rose-700">{tasks.length} maintenance tickets</strong>?
+                </p>
+                <p className="text-[11px] text-rose-500 font-semibold pt-1">This operation will clear your entire maintenance queue so you can enter fresh data.</p>
+              </div>
+              <div className="pt-2 flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteAllModalOpen(false)}
+                  className="px-4 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteAllTasks}
+                  className="px-5 py-2 text-xs font-extrabold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Yes, Delete All ({tasks.length})
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
