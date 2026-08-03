@@ -145,6 +145,127 @@ const Dashboard = () => {
     }, 1000);
   };
 
+  if (userRole === 'Employee') {
+    return (
+      <div className="space-y-6 flex flex-col relative text-xs">
+        {/* Toast Banner */}
+        {toastMessage && (
+          <div className="fixed top-24 right-6 z-[100] bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-sm font-medium animate-in slide-in-from-top-4 duration-200">
+            <CheckCircle2 className="w-5 h-5" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
+        {/* WELCOME BANNER FOR EMPLOYEE */}
+        <div className="bg-gradient-to-r from-teal-700 via-teal-800 to-indigo-950 p-6 rounded-2xl shadow-xl text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-teal-600/30">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-[11px] font-bold border border-white/20">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Employee Self-Service Portal
+            </div>
+            <h2 className="text-2xl font-extrabold tracking-tight">👋 Welcome, {userName}!</h2>
+            <p className="text-xs text-teal-100 font-medium">
+              Below are the details of your assigned IT equipment, hardware specifications, and signed memo.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/maintenance')}
+            className="px-4 py-2.5 bg-white text-teal-900 font-extrabold rounded-xl hover:bg-teal-50 transition-all shadow-md flex items-center gap-2 cursor-pointer active:scale-95 whitespace-nowrap"
+          >
+            <Wrench className="w-4 h-4 text-teal-700" />
+            Report Issue / Repair Ticket
+          </button>
+        </div>
+
+        {/* MY ASSIGNED EQUIPMENT SECTION */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-extrabold text-gray-900 flex items-center gap-2">
+              <Laptop className="w-5 h-5 text-teal-600" />
+              My Assigned Hardware ({currentAssets.length})
+            </h3>
+            <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+              Restricted User Access Mode
+            </span>
+          </div>
+
+          {currentAssets.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {currentAssets.map((asset, idx) => (
+                <div key={asset.id || idx} className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:border-teal-400 transition-all space-y-4 p-6">
+                  <div className="flex items-start justify-between border-b border-gray-100 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-teal-50 text-teal-700 rounded-xl border border-teal-100">
+                        <Laptop className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 bg-teal-100 text-teal-800 rounded uppercase">
+                          {asset.assetCode || asset.id}
+                        </span>
+                        <h4 className="text-base font-extrabold text-gray-900 mt-1">{asset.name}</h4>
+                        <p className="text-xs text-gray-500 font-mono">{asset.serial || asset.simNumber || 'N/A'}</p>
+                      </div>
+                    </div>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                      Assigned to You
+                    </span>
+                  </div>
+
+                  {/* SPECS GRID */}
+                  <div className="grid grid-cols-2 gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <div>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Processor</span>
+                      <span className="text-xs font-extrabold text-gray-800">{asset.processor || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">RAM Memory</span>
+                      <span className="text-xs font-extrabold text-gray-800">{asset.ram || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Storage</span>
+                      <span className="text-xs font-extrabold text-gray-800">{asset.storage || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Operating System</span>
+                      <span className="text-xs font-extrabold text-gray-800">{asset.os || 'N/A'}</span>
+                    </div>
+                  </div>
+
+                  {/* SIGNED MEMO SECTION */}
+                  <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-amber-100 text-amber-800 rounded-lg">
+                        <FileText className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h5 className="font-bold text-gray-900 text-xs">Signed Asset Memo</h5>
+                        <p className="text-[11px] text-amber-800 font-mono">IT Asset memo.docx</p>
+                      </div>
+                    </div>
+                    <a
+                      href="./IT_Asset_memo.docx"
+                      download="IT_Asset_memo.docx"
+                      className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs rounded-lg transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Download Memo
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white p-8 rounded-2xl border border-gray-200 text-center space-y-2">
+              <Laptop className="w-10 h-10 text-gray-300 mx-auto" />
+              <h4 className="font-bold text-gray-700 text-sm">No Assets Assigned to {userName}</h4>
+              <p className="text-xs text-gray-500">If you were recently assigned a laptop or desktop, please contact IT Admin Akram.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 flex flex-col relative">
       {/* Toast Banner */}

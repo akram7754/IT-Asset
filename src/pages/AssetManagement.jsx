@@ -856,51 +856,59 @@ const AssetManagement = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-800">Asset Management</h2>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => {
-              setBulkUploadTab('memos');
-              setIsUploadModalOpen(true);
-            }}
-            className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
-          >
-            <Upload className="w-4 h-4 text-amber-700" />
-            Bulk Upload Signed Memos (Word/PDF)
-          </button>
-          <button
-            onClick={() => {
-              setBulkUploadTab('excel');
-              setIsUploadModalOpen(true);
-            }}
-            className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
-          >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-            Bulk Import Assets (Excel/CSV)
-          </button>
-          <button
-            onClick={() => exportAssetsToExcelCSV(assets, 'All_Inventory')}
-            className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
-            title="Download all assets in Excel / CSV format"
-          >
-            <Download className="w-4 h-4 text-emerald-700" />
-            Export Assets (Excel/CSV)
-          </button>
-          <button
-            onClick={() => setIsDeleteAllModalOpen(true)}
-            className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
-            title="Delete all assets from inventory in one click"
-          >
-            <Trash2 className="w-4 h-4 text-rose-600" />
-            Delete All Assets
-          </button>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary-dark transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            Add New Asset
-          </button>
-        </div>
+        {userRole === 'Employee' ? (
+          <div className="flex items-center gap-2">
+            <span className="px-3.5 py-2 bg-amber-50 text-amber-900 border border-amber-300 font-extrabold text-xs rounded-xl shadow-2xs">
+              👤 Employee View Mode: {userName}
+            </span>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+            <button
+              onClick={() => {
+                setBulkUploadTab('memos');
+                setIsUploadModalOpen(true);
+              }}
+              className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+            >
+              <Upload className="w-4 h-4 text-amber-700" />
+              Bulk Upload Signed Memos (Word/PDF)
+            </button>
+            <button
+              onClick={() => {
+                setBulkUploadTab('excel');
+                setIsUploadModalOpen(true);
+              }}
+              className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+              Bulk Import Assets (Excel/CSV)
+            </button>
+            <button
+              onClick={() => exportAssetsToExcelCSV(assets, 'All_Inventory')}
+              className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+              title="Download all assets in Excel / CSV format"
+            >
+              <Download className="w-4 h-4 text-emerald-700" />
+              Export Assets (Excel/CSV)
+            </button>
+            <button
+              onClick={() => setIsDeleteAllModalOpen(true)}
+              className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+              title="Delete all assets from inventory in one click"
+            >
+              <Trash2 className="w-4 h-4 text-rose-600" />
+              Delete All Assets
+            </button>
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary-dark transition-all shadow-sm gap-2 active:scale-95 cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              Add New Asset
+            </button>
+          </div>
+        )}
       </div>
 
       {/* QUICK INTERACTIVE STOCK BREAKDOWN CARDS */}

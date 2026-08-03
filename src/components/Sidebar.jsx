@@ -14,10 +14,16 @@ import {
   ShoppingBag,
   Cpu
 } from 'lucide-react';
-import clsx from 'clsx';
-
 const Sidebar = ({ isMobileMenuOpen, onCloseMobileMenu }) => {
-  const navItems = [
+  const userRole = (() => {
+    try { return localStorage.getItem('itam_user_role') || 'IT Administrator'; } catch (e) { return 'IT Administrator'; }
+  })();
+
+  const navItems = userRole === 'Employee' ? [
+    { name: 'My Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'My Assigned Assets', path: '/assets', icon: Monitor },
+    { name: 'Repair & Support', path: '/maintenance', icon: Wrench },
+  ] : [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Assets', path: '/assets', icon: Monitor },
     { name: 'Vendors', path: '/vendors', icon: ShoppingBag },
