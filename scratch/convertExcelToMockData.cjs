@@ -51,7 +51,9 @@ const parsedAssets = rawRows.map((r, index) => {
     location: String(r['Location'] || 'Bangalore').trim(),
     purchaseDate: String(r['Purchase Date'] || '').trim(),
     modelDate: String(r['Model Date'] || '').trim(),
-    memoFile: r['Memo File Attached'] === 'Yes'
+    memoFile: './IT_Asset_memo.docx',
+    memoFileName: 'IT Asset memo.docx',
+    memoUploadDate: '2026-07-31'
   };
 });
 
@@ -82,4 +84,4 @@ export const maintenanceTasksData = [];
 
 const targetPath = path.join(__dirname, '../src/data/mockData.js');
 fs.writeFileSync(targetPath, mockDataContent, 'utf-8');
-console.log(`Successfully imported ${parsedAssets.length} assets from Excel into ${targetPath}`);
+console.log(`Successfully attached IT Asset memo.docx to all ${parsedAssets.length} assets in ${targetPath}`);

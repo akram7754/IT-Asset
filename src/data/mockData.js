@@ -28,7 +28,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "Mar-18",
     "modelDate": "Mar-18",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1002",
@@ -59,7 +61,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1003",
@@ -90,7 +94,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1004",
@@ -121,7 +127,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1005",
@@ -152,7 +160,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1006",
@@ -183,7 +193,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1007",
@@ -214,7 +226,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1008",
@@ -245,7 +259,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1009",
@@ -276,7 +292,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1010",
@@ -307,7 +325,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1011",
@@ -338,7 +358,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1012",
@@ -369,7 +391,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1013",
@@ -400,7 +424,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1014",
@@ -431,7 +457,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1015",
@@ -462,7 +490,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1016",
@@ -493,7 +523,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1017",
@@ -524,7 +556,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1018",
@@ -555,7 +589,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1019",
@@ -586,7 +622,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1020",
@@ -617,7 +655,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1021",
@@ -648,7 +688,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1022",
@@ -679,7 +721,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1023",
@@ -710,7 +754,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1024",
@@ -741,7 +787,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1025",
@@ -772,7 +820,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1026",
@@ -803,7 +853,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1027",
@@ -834,7 +886,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1028",
@@ -865,7 +919,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1029",
@@ -896,7 +952,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1030",
@@ -927,7 +985,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1031",
@@ -958,7 +1018,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1032",
@@ -989,7 +1051,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1033",
@@ -1020,7 +1084,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1034",
@@ -1051,7 +1117,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1035",
@@ -1082,7 +1150,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1036",
@@ -1113,7 +1183,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1037",
@@ -1144,7 +1216,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1038",
@@ -1175,7 +1249,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1039",
@@ -1206,7 +1282,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1040",
@@ -1237,7 +1315,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1041",
@@ -1268,7 +1348,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1042",
@@ -1299,7 +1381,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1043",
@@ -1330,7 +1414,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1044",
@@ -1361,7 +1447,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1045",
@@ -1392,7 +1480,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1046",
@@ -1423,7 +1513,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1047",
@@ -1454,7 +1546,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1048",
@@ -1485,7 +1579,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1049",
@@ -1516,7 +1612,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1050",
@@ -1547,7 +1645,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1051",
@@ -1578,7 +1678,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1052",
@@ -1609,7 +1711,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1053",
@@ -1640,7 +1744,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1054",
@@ -1671,7 +1777,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1055",
@@ -1702,7 +1810,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1056",
@@ -1733,7 +1843,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1057",
@@ -1764,7 +1876,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1058",
@@ -1795,7 +1909,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1059",
@@ -1826,7 +1942,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1060",
@@ -1857,7 +1975,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1061",
@@ -1888,7 +2008,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   },
   {
     "id": "AST-1062",
@@ -1919,7 +2041,9 @@ export const assetsData = [
     "location": "Bangalore",
     "purchaseDate": "2026-07-25",
     "modelDate": "",
-    "memoFile": false
+    "memoFile": "./IT_Asset_memo.docx",
+    "memoFileName": "IT Asset memo.docx",
+    "memoUploadDate": "2026-07-31"
   }
 ];
 

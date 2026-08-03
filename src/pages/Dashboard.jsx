@@ -19,13 +19,13 @@ const Dashboard = () => {
 
   // Dynamic assets from localStorage or default mock data
   const currentAssets = (() => {
-    if (!localStorage.getItem('itam_excel_imported_v11')) {
+    if (!localStorage.getItem('itam_excel_memo_v12')) {
       localStorage.removeItem('itam_assets');
       localStorage.removeItem('itam_assets_v4');
       localStorage.removeItem('itam_assets_backup');
       localStorage.removeItem('itam_deleted_asset_ids');
       localStorage.setItem('itam_assets', JSON.stringify(assetsData));
-      localStorage.setItem('itam_excel_imported_v11', 'true');
+      localStorage.setItem('itam_excel_memo_v12', 'true');
       return assetsData;
     }
 
