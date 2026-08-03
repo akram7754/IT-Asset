@@ -11,12 +11,37 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Role Mode State: 'admin' | 'employee'
+  const [loginMode, setLoginMode] = useState('admin');
+  const [employeeName, setEmployeeName] = useState('Charan');
+  const [customEmployeeName, setCustomEmployeeName] = useState('');
+
   // Change Password Modal State
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
   const [oldPassInput, setOldPassInput] = useState('');
   const [newPassInput, setNewPassInput] = useState('');
   const [confirmPassInput, setConfirmPassInput] = useState('');
   const [changePassStatus, setChangePassStatus] = useState(null);
+
+  const handleEmployeeLogin = (e) => {
+    e.preventDefault();
+    const finalName = employeeName === 'Custom' ? customEmployeeName.trim() : employeeName;
+    if (!finalName) {
+      setErrorMessage('Please select or enter your employee name.');
+      return;
+    }
+
+    try {
+      localStorage.setItem('itam_is_logged_in', 'true');
+      localStorage.setItem('itam_user_name', finalName);
+      localStorage.setItem('itam_user_role', 'Employee');
+      localStorage.setItem('itam_user_email', `${finalName.toLowerCase().replace(/\s+/g, '.')}@company.com`);
+    } catch (err) {
+      console.warn('LocalStorage error:', err);
+    }
+
+    navigate('/');
+  };
 
   const getSecretPassword = () => {
     try {
@@ -120,11 +145,35 @@ const Login = () => {
             <img src={tresconLogo} alt="10 Years Trescon Logo" className="h-16 w-auto object-contain" />
           </div>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Akram's IT Asset Portal
+            IT Asset Portal
           </h1>
           <p className="mt-1 text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
-            🔒 Private Access Restricted Strictly to Akram
+            Select Role to Sign In
           </p>
+        </div>
+
+        {/* ROLE SELECTION TAB */}
+        <div className="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-xl">
+          <button
+            type="button"
+            onClick={() => { setLoginMode('admin'); setErrorMessage(''); }}
+            className={`py-2 text-xs font-extrabold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              loginMode === 'admin' ? 'bg-white text-indigo-900 shadow-xs' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4 text-indigo-600" />
+            IT Admin Portal
+          </button>
+          <button
+            type="button"
+            onClick={() => { setLoginMode('employee'); setErrorMessage(''); }}
+            className={`py-2 text-xs font-extrabold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              loginMode === 'employee' ? 'bg-white text-emerald-900 shadow-xs' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Monitor className="w-4 h-4 text-emerald-600" />
+            Employee Portal
+          </button>
         </div>
 
         {/* Error Notification */}
@@ -134,83 +183,133 @@ const Login = () => {
           </div>
         )}
 
-        {/* Login Form */}
-        <form className="space-y-4" onSubmit={handleLoginSubmit}>
-          <div>
-            <label htmlFor="email" className="block text-xs font-bold text-gray-700 mb-1">
-              Akram's Office Gmail Address
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="w-4 h-4 text-gray-400" />
+        {/* ADMIN LOGIN FORM */}
+        {loginMode === 'admin' ? (
+          <form className="space-y-4" onSubmit={handleLoginSubmit}>
+            <div>
+              <label htmlFor="email" className="block text-xs font-bold text-gray-700 mb-1">
+                IT Administrator Email
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="w-4 h-4 text-gray-400" />
+                </div>
+                <input
+                  id="email"
+                  type="text"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full py-2.5 pl-9 pr-3 text-xs border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-bold text-gray-900 bg-white"
+                  placeholder="akramsheik7754@gmail.com"
+                />
               </div>
-              <input
-                id="email"
-                type="text"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full py-2.5 pl-9 pr-3 text-xs border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-bold text-gray-900 bg-white"
-                placeholder="akramsheik7754@gmail.com"
-              />
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="password" className="block text-xs font-bold text-gray-700 mb-1">
-              Akram's Secret Password
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="w-4 h-4 text-gray-400" />
+            <div>
+              <label htmlFor="password" className="block text-xs font-bold text-gray-700 mb-1">
+                Admin Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="w-4 h-4 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full py-2.5 pl-9 pr-3 text-xs border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-mono text-gray-900 font-extrabold bg-white"
+                  placeholder="Enter password..."
+                />
               </div>
-              <input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full py-2.5 pl-9 pr-3 text-xs border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary font-mono text-gray-900 font-extrabold bg-white"
-                placeholder="Enter password..."
-              />
             </div>
-          </div>
 
-          <div className="flex items-center justify-between text-xs pt-1">
-            <label className="flex items-center gap-2 cursor-pointer text-gray-600 font-medium">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary cursor-pointer"
-              />
-              Remember me
-            </label>
-            
+            <div className="flex items-center justify-between text-xs pt-1">
+              <label className="flex items-center gap-2 cursor-pointer text-gray-600 font-medium">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary cursor-pointer"
+                />
+                Remember me
+              </label>
+              
+              <button
+                type="button"
+                onClick={() => setIsChangePassModalOpen(true)}
+                className="font-bold text-indigo-700 hover:text-indigo-900 underline flex items-center gap-1 cursor-pointer"
+              >
+                <KeyRound className="w-3.5 h-3.5" /> Change Password
+              </button>
+            </div>
+
             <button
-              type="button"
-              onClick={() => setIsChangePassModalOpen(true)}
-              className="font-bold text-indigo-700 hover:text-indigo-900 underline flex items-center gap-1 cursor-pointer"
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3 px-4 text-xs font-extrabold text-white bg-primary hover:bg-primary-dark active:scale-[0.98] rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
-              <KeyRound className="w-3.5 h-3.5" /> Change Password
+              {isLoading ? (
+                <span>Authenticating Admin...</span>
+              ) : (
+                <>
+                  <span>Sign In as IT Administrator</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
-          </div>
+          </form>
+        ) : (
+          /* EMPLOYEE / NORMAL USER LOGIN FORM */
+          <form className="space-y-4" onSubmit={handleEmployeeLogin}>
+            <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-[11px] font-semibold text-emerald-800">
+              💡 <strong>Employee View Mode</strong>: Log in as a normal user to view only your assigned laptop, desktop, memo, and repair status.
+            </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-3 px-4 text-xs font-extrabold text-white bg-primary hover:bg-primary-dark active:scale-[0.98] rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-          >
-            {isLoading ? (
-              <span>Authenticating Akram...</span>
-            ) : (
-              <>
-                <span>Sign In to Akram's Portal</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1">
+                Select Your Employee Name
+              </label>
+              <select
+                value={employeeName}
+                onChange={(e) => setEmployeeName(e.target.value)}
+                className="w-full py-2.5 px-3 text-xs border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold text-gray-900 bg-white cursor-pointer"
+              >
+                <option value="Charan">Charan (Laptop Assigned: Lenovo V310-14ISK)</option>
+                <option value="Syed">Syed (Laptop Assigned: Lenovo L14)</option>
+                <option value="Khushi Shing">Khushi Shing (Laptop Assigned: Lenovo T460S)</option>
+                <option value="Rajesh Kumar">Rajesh Kumar (Employee)</option>
+                <option value="Custom">Other Employee (Enter Name below...)</option>
+              </select>
+            </div>
+
+            {employeeName === 'Custom' && (
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1">
+                  Enter Your Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. John Doe"
+                  value={customEmployeeName}
+                  onChange={(e) => setCustomEmployeeName(e.target.value)}
+                  className="w-full py-2.5 px-3 text-xs border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold text-gray-900 bg-white"
+                />
+              </div>
             )}
-          </button>
-        </form>
+
+            <button
+              type="submit"
+              className="w-full py-3 px-4 text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>View My Assigned Assets</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+        )}
 
         <div className="pt-2 border-t border-gray-100 text-center">
           <span className="text-[11px] text-gray-400 font-mono">

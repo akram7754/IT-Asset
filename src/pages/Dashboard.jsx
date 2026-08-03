@@ -17,8 +17,12 @@ const Dashboard = () => {
   const [toastMessage, setToastMessage] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
 
+  const userRole = localStorage.getItem('itam_user_role') || 'IT Administrator';
+  const userName = localStorage.getItem('itam_user_name') || 'Akram Sheik';
+
   // Dynamic assets from localStorage or default mock data
   const currentAssets = (() => {
+    let allAssets = assetsData;
     if (!localStorage.getItem('itam_excel_memo_v12')) {
       localStorage.removeItem('itam_assets');
       localStorage.removeItem('itam_assets_v4');
@@ -26,19 +30,26 @@ const Dashboard = () => {
       localStorage.removeItem('itam_deleted_asset_ids');
       localStorage.setItem('itam_assets', JSON.stringify(assetsData));
       localStorage.setItem('itam_excel_memo_v12', 'true');
-      return assetsData;
-    }
-
-    const saved = localStorage.getItem('itam_assets');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      } catch (e) {
-        console.error(e);
+      allAssets = assetsData;
+    } else {
+      const saved = localStorage.getItem('itam_assets');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) allAssets = parsed;
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
-    return assetsData;
+
+    if (userRole === 'Employee') {
+      return allAssets.filter(a => 
+        (a.assignedTo || '').toLowerCase().includes(userName.toLowerCase()) ||
+        (a.assignedToEmail || '').toLowerCase().includes(userName.toLowerCase())
+      );
+    }
+    return allAssets;
   })();
 
   // Dynamic statistics calculation

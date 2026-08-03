@@ -17,7 +17,9 @@ const AssetManagement = () => {
   const [searchTerm, setSearchTerm] = useState(queryFromUrl);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState(statusFromUrl);
-  const [selectedLocation, setSelectedLocation] = useState('All');
+  const userRole = localStorage.getItem('itam_user_role') || 'IT Administrator';
+  const userName = localStorage.getItem('itam_user_name') || 'Akram Sheik';
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState('25');
   const [showAssetHistoryInDetails, setShowAssetHistoryInDetails] = useState(false);
@@ -399,7 +401,14 @@ const AssetManagement = () => {
     const matchesLocation = selectedLocation === 'All' || 
       (asset.location && asset.location.toLowerCase().includes(selectedLocation.toLowerCase()));
 
-    return matchesSearch && matchesCategory && matchesStatus && matchesLocation;
+    // Normal Employee Role matching: Only show assets assigned to the logged in employee
+    const isEmployeeMode = userRole === 'Employee';
+    const matchesUser = !isEmployeeMode || (
+      (asset.assignedTo && asset.assignedTo.toLowerCase().includes(userName.toLowerCase())) ||
+      (asset.assignedToEmail && asset.assignedToEmail.toLowerCase().includes(userName.toLowerCase()))
+    );
+
+    return matchesSearch && matchesCategory && matchesStatus && matchesLocation && matchesUser;
   });
 
   useEffect(() => {

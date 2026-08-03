@@ -108,6 +108,11 @@ const Header = ({ onToggleMobileMenu }) => {
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             System Online
           </span>
+          <span className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[11px] font-extrabold rounded-full border ${
+            userRole === 'Employee' ? 'bg-amber-50 text-amber-800 border-amber-300' : 'bg-indigo-50 text-indigo-800 border-indigo-300'
+          }`}>
+            {userRole === 'Employee' ? `👤 Employee Mode (${userName})` : '🛡️ IT Administrator'}
+          </span>
         </div>
       </div>
 
