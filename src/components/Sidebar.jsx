@@ -86,7 +86,7 @@ const Sidebar = ({ isMobileMenuOpen, onCloseMobileMenu }) => {
               localStorage.removeItem('itam_is_logged_in');
             } catch (e) {}
             if (onCloseMobileMenu) onCloseMobileMenu();
-            window.location.href = '/login';
+            window.location.hash = '#/login';
           }}
           className="w-full flex items-center px-6 py-2.5 text-xs font-extrabold text-teal-50 hover:bg-[#007578] hover:text-white transition-colors rounded-xl cursor-pointer"
         >

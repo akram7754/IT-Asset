@@ -71,7 +71,7 @@ const Header = ({ onToggleMobileMenu }) => {
       localStorage.removeItem('itam_is_logged_in');
     } catch (e) {}
     setIsProfileMenuOpen(false);
-    window.location.href = '/login';
+    window.location.hash = '#/login';
   };
 
   const userName = (() => {
