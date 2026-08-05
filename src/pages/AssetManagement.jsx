@@ -4,7 +4,7 @@ import {
   Plus, Search, Filter, Edit2, Trash2, QrCode, Monitor, 
   MousePointer, Cpu, User, HardDrive, Smartphone, Network, Laptop,
   Eye, Mail, Layers, ShieldCheck, Database, AppWindow, MapPin, Calendar, CheckCircle2, ChevronRight, X,
-  CreditCard, Phone, Radio, Signal, Check, Upload, Download, FileSpreadsheet, FileText, Globe, Wrench, History, Headphones
+  CreditCard, Phone, Radio, Signal, Check, Upload, Download, FileSpreadsheet, FileText, Globe, Wrench, History, Headphones, Printer
 } from 'lucide-react';
 import { assetsData, employeesData } from '../data/mockData';
 import { saveAssetsToStorage, hydrateAssetsWithIDB, saveMemoToIDB } from '../utils/storage';
@@ -236,6 +236,166 @@ const AssetManagement = () => {
       console.error('Error in handleMemoFileDelete:', err);
       showNotification('Attached memo file cleared!');
     }
+  };
+
+  // Helper function to print or export official Memo with assigned hardware specifications as PDF
+  const handlePrintLetterheadMemo = (targetAsset = null) => {
+    const asset = targetAsset || previewMemoFile?.asset || viewingAsset || editingAsset;
+    if (!asset) {
+      showNotification('No asset data found for printing memo.');
+      return;
+    }
+
+    const printWin = window.open('', '_blank', 'width=900,height=1100');
+    if (!printWin) {
+      showNotification('Please allow popups in your browser to print/download the Memo PDF.');
+      return;
+    }
+
+    const assignedUser = asset.assignedTo ? `${asset.assignedTo}${asset.assignedToRole ? ` (${asset.assignedToRole})` : ''}` : 'All Staff';
+    const memoDate = asset.memoUploadDate || new Date().toISOString().split('T')[0];
+    const assetCode = asset.assetCode || 'N/A';
+    const equipName = asset.name || 'IT Asset Equipment';
+    const modelDate = asset.modelDate || asset.purchaseDate || 'N/A';
+    const serial = asset.serial || asset.simNumber || 'N/A';
+    const processor = asset.processor || 'N/A';
+    const ram = asset.ram || 'N/A';
+    const storage = asset.storage || 'N/A';
+    const monitor = asset.monitorName ? `${asset.monitorName} (S/N: ${asset.monitorSerial || 'N/A'})` : null;
+    const mouse = asset.mouseModel ? `${asset.mouseModel} (S/N: ${asset.mouseSerial || 'N/A'})` : null;
+    const signature = asset.digitalSignature;
+    const designation = asset.assignedToRole || 'Employee';
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>IT Asset Memo - ${asset.assignedTo || asset.name}</title>
+        <style>
+          @page { size: A4; margin: 15mm; }
+          body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; margin: 0; padding: 24px; font-size: 13px; line-height: 1.6; }
+          .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 2px solid #cbd5e1; margin-bottom: 18px; }
+          .logo-text { font-size: 28px; font-weight: 800; color: #00A3A6; letter-spacing: -0.5px; }
+          .logo-tag { font-size: 11px; font-weight: 700; color: #64748b; margin-top: 2px; }
+          .contact-info { text-align: right; font-size: 11px; color: #64748b; line-height: 1.5; }
+          .memo-meta { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 14px; font-size: 13px; color: #0f172a; }
+          .memo-title { text-align: center; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 18px; color: #0f172a; }
+          .section-title { font-weight: 700; color: #008689; font-size: 13px; margin-top: 16px; margin-bottom: 6px; }
+          .specs-box { background-color: #ecfeff; border: 1px solid #a5f3fc; border-radius: 12px; padding: 16px; margin: 16px 0; }
+          .specs-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 11px; text-transform: uppercase; color: #083344; padding-bottom: 10px; border-bottom: 1px solid #bae6fd; margin-bottom: 12px; }
+          .specs-code { background: #dcfce7; color: #14532d; padding: 3px 10px; border-radius: 6px; border: 1px solid #86efac; font-family: monospace; font-weight: 700; font-size: 11px; }
+          .specs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 11px; }
+          .spec-item span { display: block; font-size: 10px; color: #64748b; margin-bottom: 2px; }
+          .spec-item strong { color: #0f172a; font-size: 12px; }
+          .acceptance { margin-top: 28px; padding-top: 16px; border-top: 1px solid #cbd5e1; }
+          .sig-img { max-height: 55px; border-bottom: 2px solid #0f172a; padding: 0 8px; }
+          .sig-text { font-family: 'Georgia', serif; font-style: italic; font-weight: bold; font-size: 18px; color: #1e3a8a; border-bottom: 2px solid #0f172a; padding: 2px 12px; }
+          .disclaimer { margin-top: 36px; font-size: 9px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 12px; }
+          .no-print-bar { background: #0f172a; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-radius: 8px; }
+          .print-btn { background: #00A3A6; color: white; font-weight: bold; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+          .print-btn:hover { background: #008689; }
+          @media print {
+            .no-print-bar { display: none !important; }
+            body { padding: 0; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="no-print-bar">
+          <span style="font-size:12px; font-weight:600;">Official IT Handover Memo with Hardware Specs</span>
+          <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+        </div>
+        
+        <div class="header">
+          <div>
+            <div class="logo-text">trescon</div>
+            <div class="logo-tag">Connecting Businesses with Opportunities</div>
+          </div>
+          <div class="contact-info">
+            <div>🌐 tresconglobal.com</div>
+            <div>✉️ info@tresconglobal.com</div>
+            <div>📞 +91 81059 75937</div>
+          </div>
+        </div>
+
+        <div class="memo-meta">
+          <div><strong>To:</strong> ${assignedUser}</div>
+          <div><strong>Date:</strong> ${memoDate}</div>
+        </div>
+
+        <div class="memo-title">AMENDMENT TO THE APPOINTMENT LETTER – MEMO</div>
+
+        <div class="section-title">IT Policy – Company Assets</div>
+        <p style="margin-top:2px;">This policy forms part of the Appointment Letter and Company Policies. All Company-issued assets remain the property of the Company and must be handled responsibly to prevent loss, theft, or damage.</p>
+
+        <div class="specs-box">
+          <div class="specs-header">
+            <span>ASSIGNED EQUIPMENT & HARDWARE SPECIFICATIONS:</span>
+            <span class="specs-code">CODE: ${assetCode}</span>
+          </div>
+          <div class="specs-grid">
+            <div class="spec-item"><span>Equipment Name:</span><strong>${equipName}</strong></div>
+            <div class="spec-item"><span>Model Date:</span><strong>${modelDate}</strong></div>
+            <div class="spec-item"><span>CPU Serial Number:</span><strong>S/N: ${serial}</strong></div>
+            <div class="spec-item"><span>Processor:</span><strong>${processor}</strong></div>
+            <div class="spec-item"><span>RAM Memory:</span><strong>${ram}</strong></div>
+            <div class="spec-item"><span>HHD / Storage:</span><strong>${storage}</strong></div>
+          </div>
+          ${(monitor || mouse) ? `
+            <div style="margin-top:12px; padding-top:10px; border-top:1px solid #bae6fd; font-size:11px; color:#475569; display:flex; gap:20px;">
+              ${monitor ? `<div>Monitor: <strong>${monitor}</strong></div>` : ''}
+              ${mouse ? `<div>Mouse: <strong>${mouse}</strong></div>` : ''}
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="section-title">Employee Responsibilities</div>
+        <p style="margin-top:2px;">Employees are responsible for:</p>
+        <ul style="margin-top:4px; padding-left:20px;">
+          <li>Protecting Company-issued assets from loss, theft, or damage.</li>
+          <li>Maintaining assets in good working condition, subject to normal wear and tear.</li>
+          <li>Reporting any loss, damage, or malfunction immediately to the IT and HR Departments.</li>
+        </ul>
+
+        <div class="section-title">Return of Assets</div>
+        <p style="margin-top:2px;">Upon resignation, termination, or separation, employees must return all Company-issued assets, including laptops, desktops, mobile phones, SIM cards, chargers, accessories, and storage devices. Any damage, loss, or failure to return assets may result in recovery of repair or replacement costs from the employee.</p>
+
+        <div class="section-title">Non-Compliance</div>
+        <p style="margin-top:2px;">Failure to complete the asset handover process may affect relieving formalities, full and final settlement, incentives, commissions, or other dues, subject to applicable laws. Any misuse or tampering of Company assets will be treated as a policy violation, and the Company reserves the right to take disciplinary or legal action as applicable.</p>
+
+        <div style="margin-top:20px;">
+          <p style="margin-bottom:4px;">Sincerely,</p>
+          <strong style="font-size:13px; color:#0f172a;">Edward C Maben</strong>
+          <div style="font-size:11px; color:#64748b;">Chief Human Resources Officer</div>
+        </div>
+
+        <div class="acceptance">
+          <div style="font-weight:bold; margin-bottom:12px;">Accepted by:</div>
+          <div style="display:flex; justify-content:space-between; gap:20px; font-size:12px;">
+            <div><strong>Employee Name:</strong> ${asset.assignedTo || '____________________'}</div>
+            <div><strong>Date:</strong> ${memoDate}</div>
+            <div><strong>Designation:</strong> ${designation}</div>
+          </div>
+          <div style="margin-top:14px; display:flex; align-items:center; gap:10px;">
+            <strong>Signature:</strong>
+            ${signature ? (signature.startsWith('data:image/') ? `<img src="${signature}" class="sig-img" />` : `<span class="sig-text">${signature}</span>`) : '<span style="border-bottom:1px solid #000; width:200px; display:inline-block; height:20px;"></span>'}
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          Disclaimer: The information shared by Trescon is confidential and intended solely for the recipient. It may not be copied, distributed, or relied upon without prior written consent. Trescon makes no warranties regarding the accuracy or completeness of the content and accepts no liability for any loss arising from its use. © 2025 Trescon. All rights reserved.
+        </div>
+
+        <script>
+          setTimeout(() => { window.print(); }, 500);
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWin.document.open();
+    printWin.document.write(htmlContent);
+    printWin.document.close();
   };
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -3204,13 +3364,23 @@ const AssetManagement = () => {
                     📋 Official Letterhead
                   </button>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handlePrintLetterheadMemo(previewMemoFile?.asset)}
+                  className="px-3.5 py-1.5 text-xs font-extrabold bg-[#00A3A6] hover:bg-[#008689] text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
+                  title="Print or Save PDF containing full memo with hardware specifications"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  🖨️ Print / Save PDF (With Specs)
+                </button>
                 <a
                   href={previewMemoFile.url}
-                  download={previewMemoFile.name || 'Signed_Asset_Memo.pdf'}
-                  className="px-3.5 py-1.5 text-xs font-bold bg-white text-amber-950 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
+                  download={previewMemoFile.name || 'Signed_Asset_Memo.docx'}
+                  className="px-3 py-1.5 text-xs font-bold bg-white text-amber-950 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
+                  title="Download attached raw template document"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  Download File
+                  Attached File
                 </a>
                 <button
                   onClick={() => setPreviewMemoFile(null)}
@@ -3280,31 +3450,46 @@ const AssetManagement = () => {
                       </div>
                       <h4 className="font-extrabold text-lg text-gray-900">{previewMemoFile.name || 'Signed IT Asset Memo Document'}</h4>
                       <p className="text-xs text-gray-500 leading-relaxed max-w-md mx-auto">
-                        Word document attached and saved securely. Click below to download the exact copy or view the official IT Handover Memo letterhead copy.
+                        Note: The attached Word document is a generic policy template. To print or download the complete Memo with specific Assigned Equipment & Hardware Specs included, click below.
                       </p>
                       <div className="pt-3 flex justify-center gap-3 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => handlePrintLetterheadMemo(previewMemoFile?.asset)}
+                          className="px-5 py-2.5 bg-[#00A3A6] hover:bg-[#008689] text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                        >
+                          <Printer className="w-4 h-4" /> 🖨️ Print / Save PDF (With Hardware Specs)
+                        </button>
                         <a
                           href={previewMemoFile.url}
                           download={previewMemoFile.name || 'Signed_Asset_Memo.docx'}
                           className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer"
                         >
-                          <Download className="w-4 h-4" /> Download Word Document File
+                          <Download className="w-4 h-4" /> Download Raw Word Template (.docx)
                         </a>
-                        <button
-                          type="button"
-                          onClick={() => setPreviewTabMode('letterhead')}
-                          className="px-5 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs rounded-xl border border-amber-300 transition-all flex items-center gap-2 cursor-pointer"
-                        >
-                          📋 View Handover Letterhead
-                        </button>
                       </div>
                     </div>
                   )}
                 </div>
               ) : (
                 /* OFFICIAL TRESCON IT ASSET POLICY & HANDOVER MEMO LETTERHEAD PREVIEW */
-                <div className="bg-white p-8 md:p-12 rounded-xl shadow-2xl border border-gray-300 max-w-3xl w-full text-left space-y-6 font-sans text-gray-800 my-4 text-xs leading-relaxed">
-                  {/* Trescon Header matching exact letterhead banner */}
+                <div className="w-full flex flex-col items-center">
+                  <div className="w-full max-w-3xl flex justify-between items-center bg-[#007578] text-white px-5 py-3 rounded-xl shadow-md border border-[#005f62] mb-3">
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-teal-200" />
+                      <span className="text-xs font-extrabold tracking-wide">Official Handover Letterhead Memo (Includes Full Equipment Specs)</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handlePrintLetterheadMemo(previewMemoFile?.asset)}
+                      className="px-4 py-1.5 bg-white text-[#007578] hover:bg-teal-50 font-extrabold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+                    >
+                      <Printer className="w-3.5 h-3.5" /> 🖨️ Print / Save as PDF (With Specs)
+                    </button>
+                  </div>
+
+                  <div className="bg-white p-8 md:p-12 rounded-xl shadow-2xl border border-gray-300 max-w-3xl w-full text-left space-y-6 font-sans text-gray-800 my-2 text-xs leading-relaxed">
+                    {/* Trescon Header matching exact letterhead banner */}
                   <div className="space-y-4 pb-4">
                     <div className="flex justify-between items-center px-1">
                       {/* Left Logo Section */}
@@ -3560,6 +3745,7 @@ const AssetManagement = () => {
                     Disclaimer: The information shared by Trescon is confidential and intended solely for the recipient. It may not be copied, distributed, or relied upon without prior written consent. Trescon makes no warranties regarding the accuracy or completeness of the content and accepts no liability for any loss arising from its use. © 2025 Trescon. All rights reserved.
                   </div>
                 </div>
+              </div>
               )}
             </div>
           </div>
