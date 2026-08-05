@@ -17,6 +17,7 @@ const AssetManagement = () => {
   const [searchTerm, setSearchTerm] = useState(queryFromUrl);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState(statusFromUrl);
+  const [selectedLocation, setSelectedLocation] = useState('All');
   const userRole = localStorage.getItem('itam_user_role') || 'IT Administrator';
   const userName = localStorage.getItem('itam_user_name') || 'Akram Sheik';
 
@@ -50,7 +51,7 @@ const AssetManagement = () => {
     const newDeletedList = Array.from(new Set([...deletedList, ...selectedAssetIds]));
     localStorage.setItem('itam_deleted_asset_ids', JSON.stringify(newDeletedList));
     setSelectedAssetIds([]);
-    showToast(`Successfully deleted ${selectedAssetIds.length} selected asset(s).`);
+    showNotification(`Successfully deleted ${selectedAssetIds.length} selected asset(s).`);
   };
 
   const handleDeleteAllAssets = () => {
@@ -62,7 +63,7 @@ const AssetManagement = () => {
     localStorage.setItem('itam_deleted_asset_ids', JSON.stringify(newDeletedList));
     setSelectedAssetIds([]);
     setIsDeleteAllModalOpen(false);
-    showToast('All assets have been deleted successfully. You can now import fresh data.');
+    showNotification('All assets have been deleted successfully. You can now import fresh data.');
   };
 
   const [assets, setAssets] = useState(() => {

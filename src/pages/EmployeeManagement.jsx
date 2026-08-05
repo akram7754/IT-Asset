@@ -64,10 +64,10 @@ const EmployeeManagement = () => {
     setSearchTerm(queryFromUrl);
   }, [queryFromUrl]);
 
-  const showToast = (message) => {
+  function showToast(message) {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 3500);
-  };
+  }
 
   const handleSearchChange = (value) => {
     setSearchTerm(value);

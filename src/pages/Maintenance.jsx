@@ -98,10 +98,10 @@ const Maintenance = () => {
     setSearchTerm(queryFromUrl);
   }, [queryFromUrl]);
 
-  const showToast = (msg) => {
+  function showToast(msg) {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
-  };
+  }
 
   const handleSearchChange = (value) => {
     setSearchTerm(value);
