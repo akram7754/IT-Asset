@@ -272,31 +272,35 @@ const AssetManagement = () => {
       <head>
         <title>IT Asset Memo - ${asset.assignedTo || asset.name}</title>
         <style>
-          @page { size: A4; margin: 15mm; }
-          body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; margin: 0; padding: 24px; font-size: 13px; line-height: 1.6; }
-          .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 2px solid #cbd5e1; margin-bottom: 18px; }
-          .logo-text { font-size: 28px; font-weight: 800; color: #00A3A6; letter-spacing: -0.5px; }
-          .logo-tag { font-size: 11px; font-weight: 700; color: #64748b; margin-top: 2px; }
-          .contact-info { text-align: right; font-size: 11px; color: #64748b; line-height: 1.5; }
-          .memo-meta { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 14px; font-size: 13px; color: #0f172a; }
-          .memo-title { text-align: center; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 18px; color: #0f172a; }
-          .section-title { font-weight: 700; color: #008689; font-size: 13px; margin-top: 16px; margin-bottom: 6px; }
-          .specs-box { background-color: #ecfeff; border: 1px solid #a5f3fc; border-radius: 12px; padding: 16px; margin: 16px 0; }
-          .specs-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 11px; text-transform: uppercase; color: #083344; padding-bottom: 10px; border-bottom: 1px solid #bae6fd; margin-bottom: 12px; }
-          .specs-code { background: #dcfce7; color: #14532d; padding: 3px 10px; border-radius: 6px; border: 1px solid #86efac; font-family: monospace; font-weight: 700; font-size: 11px; }
-          .specs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 11px; }
-          .spec-item span { display: block; font-size: 10px; color: #64748b; margin-bottom: 2px; }
-          .spec-item strong { color: #0f172a; font-size: 12px; }
-          .acceptance { margin-top: 28px; padding-top: 16px; border-top: 1px solid #cbd5e1; }
-          .sig-img { max-height: 55px; border-bottom: 2px solid #0f172a; padding: 0 8px; }
-          .sig-text { font-family: 'Georgia', serif; font-style: italic; font-weight: bold; font-size: 18px; color: #1e3a8a; border-bottom: 2px solid #0f172a; padding: 2px 12px; }
-          .disclaimer { margin-top: 36px; font-size: 9px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 12px; }
-          .no-print-bar { background: #0f172a; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-radius: 8px; }
-          .print-btn { background: #00A3A6; color: white; font-weight: bold; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+          @page { size: A4 portrait; margin: 8mm 10mm; }
+          * { box-sizing: border-box; }
+          body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; margin: 0; padding: 10px 16px; font-size: 11px; line-height: 1.35; }
+          .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 2px solid #cbd5e1; margin-bottom: 10px; }
+          .logo-text { font-size: 24px; font-weight: 800; color: #00A3A6; letter-spacing: -0.5px; }
+          .logo-tag { font-size: 10px; font-weight: 700; color: #64748b; margin-top: 1px; }
+          .contact-info { text-align: right; font-size: 10px; color: #64748b; line-height: 1.35; }
+          .memo-meta { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; font-size: 11.5px; color: #0f172a; }
+          .memo-title { text-align: center; font-weight: 800; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; color: #0f172a; }
+          .section-title { font-weight: 700; color: #008689; font-size: 11.5px; margin-top: 8px; margin-bottom: 2px; }
+          .specs-box { background-color: #ecfeff; border: 1px solid #a5f3fc; border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+          .specs-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 10px; text-transform: uppercase; color: #083344; padding-bottom: 6px; border-bottom: 1px solid #bae6fd; margin-bottom: 8px; }
+          .specs-code { background: #dcfce7; color: #14532d; padding: 2px 8px; border-radius: 4px; border: 1px solid #86efac; font-family: monospace; font-weight: 700; font-size: 10px; }
+          .specs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 12px; font-size: 10px; }
+          .spec-item span { display: block; font-size: 9px; color: #64748b; margin-bottom: 1px; }
+          .spec-item strong { color: #0f172a; font-size: 11px; }
+          .acceptance { margin-top: 12px; padding-top: 10px; border-top: 1px solid #cbd5e1; }
+          .sig-img { max-height: 45px; border-bottom: 2px solid #0f172a; padding: 0 6px; }
+          .sig-text { font-family: 'Georgia', serif; font-style: italic; font-weight: bold; font-size: 16px; color: #1e3a8a; border-bottom: 2px solid #0f172a; padding: 1px 8px; }
+          .disclaimer { margin-top: 12px; font-size: 8.5px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 6px; line-height: 1.25; }
+          .no-print-bar { background: #0f172a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-radius: 6px; }
+          .print-btn { background: #00A3A6; color: white; font-weight: bold; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 12px; }
           .print-btn:hover { background: #008689; }
           @media print {
+            @page { size: A4 portrait; margin: 6mm 8mm; }
+            html, body { height: 100%; width: 100%; overflow: hidden; page-break-after: avoid; page-break-before: avoid; page-break-inside: avoid; }
             .no-print-bar { display: none !important; }
-            body { padding: 0; }
+            body { padding: 0 !important; font-size: 10.5px !important; line-height: 1.3 !important; }
+            p, ul, li, div { page-break-inside: avoid !important; }
           }
         </style>
       </head>
@@ -326,7 +330,7 @@ const AssetManagement = () => {
         <div class="memo-title">AMENDMENT TO THE APPOINTMENT LETTER – MEMO</div>
 
         <div class="section-title">IT Policy – Company Assets</div>
-        <p style="margin-top:2px;">This policy forms part of the Appointment Letter and Company Policies. All Company-issued assets remain the property of the Company and must be handled responsibly to prevent loss, theft, or damage.</p>
+        <p style="margin-top:1px; margin-bottom:3px;">This policy forms part of the Appointment Letter and Company Policies. All Company-issued assets remain the property of the Company and must be handled responsibly to prevent loss, theft, or damage.</p>
 
         <div class="specs-box">
           <div class="specs-header">
@@ -342,7 +346,7 @@ const AssetManagement = () => {
             <div class="spec-item"><span>HHD / Storage:</span><strong>${storage}</strong></div>
           </div>
           ${(monitor || mouse) ? `
-            <div style="margin-top:12px; padding-top:10px; border-top:1px solid #bae6fd; font-size:11px; color:#475569; display:flex; gap:20px;">
+            <div style="margin-top:8px; padding-top:6px; border-top:1px solid #bae6fd; font-size:10px; color:#475569; display:flex; gap:20px;">
               ${monitor ? `<div>Monitor: <strong>${monitor}</strong></div>` : ''}
               ${mouse ? `<div>Mouse: <strong>${mouse}</strong></div>` : ''}
             </div>
@@ -350,35 +354,35 @@ const AssetManagement = () => {
         </div>
 
         <div class="section-title">Employee Responsibilities</div>
-        <p style="margin-top:2px;">Employees are responsible for:</p>
-        <ul style="margin-top:4px; padding-left:20px;">
+        <p style="margin-top:1px; margin-bottom:2px;">Employees are responsible for:</p>
+        <ul style="margin-top:2px; margin-bottom:4px; padding-left:18px;">
           <li>Protecting Company-issued assets from loss, theft, or damage.</li>
           <li>Maintaining assets in good working condition, subject to normal wear and tear.</li>
           <li>Reporting any loss, damage, or malfunction immediately to the IT and HR Departments.</li>
         </ul>
 
         <div class="section-title">Return of Assets</div>
-        <p style="margin-top:2px;">Upon resignation, termination, or separation, employees must return all Company-issued assets, including laptops, desktops, mobile phones, SIM cards, chargers, accessories, and storage devices. Any damage, loss, or failure to return assets may result in recovery of repair or replacement costs from the employee.</p>
+        <p style="margin-top:1px; margin-bottom:3px;">Upon resignation, termination, or separation, employees must return all Company-issued assets, including laptops, desktops, mobile phones, SIM cards, chargers, accessories, and storage devices. Any damage, loss, or failure to return assets may result in recovery of repair or replacement costs from the employee.</p>
 
         <div class="section-title">Non-Compliance</div>
-        <p style="margin-top:2px;">Failure to complete the asset handover process may affect relieving formalities, full and final settlement, incentives, commissions, or other dues, subject to applicable laws. Any misuse or tampering of Company assets will be treated as a policy violation, and the Company reserves the right to take disciplinary or legal action as applicable.</p>
+        <p style="margin-top:1px; margin-bottom:3px;">Failure to complete the asset handover process may affect relieving formalities, full and final settlement, incentives, commissions, or other dues, subject to applicable laws. Any misuse or tampering of Company assets will be treated as a policy violation, and the Company reserves the right to take disciplinary or legal action as applicable.</p>
 
-        <div style="margin-top:20px;">
-          <p style="margin-bottom:4px;">Sincerely,</p>
-          <strong style="font-size:13px; color:#0f172a;">Edward C Maben</strong>
-          <div style="font-size:11px; color:#64748b;">Chief Human Resources Officer</div>
+        <div style="margin-top:10px;">
+          <p style="margin-bottom:2px;">Sincerely,</p>
+          <strong style="font-size:12px; color:#0f172a;">Edward C Maben</strong>
+          <div style="font-size:10px; color:#64748b;">Chief Human Resources Officer</div>
         </div>
 
         <div class="acceptance">
-          <div style="font-weight:bold; margin-bottom:12px;">Accepted by:</div>
-          <div style="display:flex; justify-content:space-between; gap:20px; font-size:12px;">
+          <div style="font-weight:bold; margin-bottom:8px;">Accepted by:</div>
+          <div style="display:flex; justify-content:space-between; gap:20px; font-size:11px;">
             <div><strong>Employee Name:</strong> ${asset.assignedTo || '____________________'}</div>
             <div><strong>Date:</strong> ${memoDate}</div>
             <div><strong>Designation:</strong> ${designation}</div>
           </div>
-          <div style="margin-top:14px; display:flex; align-items:center; gap:10px;">
+          <div style="margin-top:10px; display:flex; align-items:center; gap:10px;">
             <strong>Signature:</strong>
-            ${signature ? (signature.startsWith('data:image/') ? `<img src="${signature}" class="sig-img" />` : `<span class="sig-text">${signature}</span>`) : '<span style="border-bottom:1px solid #000; width:200px; display:inline-block; height:20px;"></span>'}
+            ${signature ? (signature.startsWith('data:image/') ? `<img src="${signature}" class="sig-img" />` : `<span class="sig-text">${signature}</span>`) : '<span style="border-bottom:1px solid #000; width:180px; display:inline-block; height:18px;"></span>'}
           </div>
         </div>
 
@@ -2430,7 +2434,7 @@ const AssetManagement = () => {
                   <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
                     <input
                       type="text"
-                      placeholder="Type employee signature (e.g. Charan / Sarah Jenkins)"
+                      placeholder="Type employee signature..."
                       value={newAsset.digitalSignature || ''}
                       onChange={(e) => setNewAsset({ ...newAsset, digitalSignature: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-serif italic text-blue-900 font-bold bg-white"
@@ -2524,7 +2528,7 @@ const AssetManagement = () => {
                   <input
                     type="text"
                     list="edit-employee-list"
-                    placeholder="Charan"
+                    placeholder="Enter employee name manually..."
                     value={editingAsset.assignedTo || ''}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -2550,7 +2554,7 @@ const AssetManagement = () => {
                   <label className="block text-xs font-bold text-blue-900 mb-1">Assigned To Employee Email Id</label>
                   <input
                     type="email"
-                    placeholder="charan@tresconglobal.com"
+                    placeholder="e.g. employee@company.com"
                     value={editingAsset.assignedToEmail || ''}
                     onChange={(e) => setEditingAsset({ ...editingAsset, assignedToEmail: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono text-gray-800"
@@ -2908,7 +2912,7 @@ const AssetManagement = () => {
                   <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
                     <input
                       type="text"
-                      placeholder="Type employee signature (e.g. Charan / Sarah Jenkins)"
+                      placeholder="Type employee signature..."
                       value={editingAsset.digitalSignature || ''}
                       onChange={(e) => setEditingAsset({ ...editingAsset, digitalSignature: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-serif italic text-blue-900 font-bold bg-white"

@@ -700,7 +700,7 @@ const ComponentInventory = () => {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Charan"
+                  placeholder="e.g. Employee Name"
                   value={installForm.employeeName}
                   onChange={(e) => setInstallForm({ ...installForm, employeeName: e.target.value })}
                   className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 font-bold"
