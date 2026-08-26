@@ -2050,7 +2050,6 @@ const AssetManagement = () => {
                   <input
                     type="text"
                     list="add-employee-list"
-                    placeholder="Enter employee name manually..."
                     value={newAsset.assignedTo || ''}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -2076,7 +2075,6 @@ const AssetManagement = () => {
                   <label className="block text-xs font-medium text-blue-900 mb-1">Assigned To Employee Email Id</label>
                   <input
                     type="email"
-                    placeholder="e.g. employee@company.com"
                     value={newAsset.assignedToEmail}
                     onChange={(e) => setNewAsset({ ...newAsset, assignedToEmail: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono"
@@ -2090,7 +2088,6 @@ const AssetManagement = () => {
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Asset Code / Tag</label>
                   <input
                     type="text"
-                    placeholder="e.g. TGBS/B/L10"
                     value={newAsset.assetCode || ''}
                     onChange={(e) => setNewAsset({ ...newAsset, assetCode: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono bg-white"
@@ -2101,7 +2098,6 @@ const AssetManagement = () => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Dell Latitude 3480"
                     value={newAsset.name}
                     onChange={(e) => setNewAsset({ ...newAsset, name: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-medium"
@@ -2136,7 +2132,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-semibold text-gray-700 mb-1">Model Date / Release Date</label>
                       <input
                         type="text"
-                        placeholder="e.g. 2023-05-15 / May 2023"
                         value={newAsset.modelDate || newAsset.purchaseDate || ''}
                         onChange={(e) => setNewAsset({ ...newAsset, modelDate: e.target.value, purchaseDate: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-sans bg-white"
@@ -2147,7 +2142,6 @@ const AssetManagement = () => {
                       <input
                         type="text"
                         required
-                        placeholder="e.g. CPU-DEL-7090-X1"
                         value={newAsset.serial}
                         onChange={(e) => setNewAsset({ ...newAsset, serial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono"
@@ -2157,7 +2151,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-medium text-gray-700 mb-1">Processor</label>
                       <input
                         type="text"
-                        placeholder="e.g. Intel Core i7-12700"
                         value={newAsset.processor}
                         onChange={(e) => setNewAsset({ ...newAsset, processor: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2171,7 +2164,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-medium text-gray-700 mb-1">Ram</label>
                       <input
                         type="text"
-                        placeholder="e.g. 16 GB DDR4"
                         value={newAsset.ram}
                         onChange={(e) => setNewAsset({ ...newAsset, ram: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2181,7 +2173,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-medium text-gray-700 mb-1">HHD / Storage</label>
                       <input
                         type="text"
-                        placeholder="e.g. 512 GB SSD"
                         value={newAsset.storage}
                         onChange={(e) => setNewAsset({ ...newAsset, storage: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2191,7 +2182,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-medium text-gray-700 mb-1">Graphic Card</label>
                       <input
                         type="text"
-                        placeholder="e.g. NVIDIA RTX 3060 / Intel Iris"
                         value={newAsset.graphicCard || ''}
                         onChange={(e) => setNewAsset({ ...newAsset, graphicCard: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2201,7 +2191,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-medium text-gray-700 mb-1">OS</label>
                       <input
                         type="text"
-                        placeholder="e.g. Windows 11 Pro"
                         value={newAsset.os}
                         onChange={(e) => setNewAsset({ ...newAsset, os: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2214,7 +2203,6 @@ const AssetManagement = () => {
                     <label className="block text-xs font-bold text-gray-700 mb-1">Software</label>
                     <input
                       type="text"
-                      placeholder="e.g. Microsoft 365,Hubspot"
                       value={newAsset.software}
                       onChange={(e) => setNewAsset({ ...newAsset, software: e.target.value })}
                       className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono text-gray-800"
@@ -2227,7 +2215,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-purple-900 mb-1">Monitor Name</label>
                       <input
                         type="text"
-                        placeholder="e.g. Dell UltraSharp 27"
                         value={newAsset.monitorName}
                         onChange={(e) => setNewAsset({ ...newAsset, monitorName: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white"
@@ -2237,7 +2224,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-purple-900 mb-1">Monitor- Serial Number</label>
                       <input
                         type="text"
-                        placeholder="e.g. MON-DEL-2722-A"
                         value={newAsset.monitorSerial}
                         onChange={(e) => setNewAsset({ ...newAsset, monitorSerial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono"
@@ -2251,7 +2237,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-emerald-900 mb-1">Mouse Model</label>
                       <input
                         type="text"
-                        placeholder="e.g. Logitech MX Master 3S"
                         value={newAsset.mouseModel}
                         onChange={(e) => setNewAsset({ ...newAsset, mouseModel: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white"
@@ -2261,7 +2246,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-emerald-900 mb-1">Serial Number (Mouse)</label>
                       <input
                         type="text"
-                        placeholder="e.g. MS-LOG-MX3-01"
                         value={newAsset.mouseSerial}
                         onChange={(e) => setNewAsset({ ...newAsset, mouseSerial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono"
@@ -2277,7 +2261,6 @@ const AssetManagement = () => {
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Headphone / RJ45 Cable / Dongle"
                         value={newAsset.accessoryItem || ''}
                         onChange={(e) => setNewAsset({ ...newAsset, accessoryItem: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-medium text-gray-900"
@@ -2287,7 +2270,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-cyan-950 mb-1">Model Name</label>
                       <input
                         type="text"
-                        placeholder="e.g. Jabra Evolve 65 / Cat6 Cable"
                         value={newAsset.accessoryModel || ''}
                         onChange={(e) => setNewAsset({ ...newAsset, accessoryModel: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-medium text-gray-900"
@@ -2297,7 +2279,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-cyan-950 mb-1">Serial Number (Accessory S/N)</label>
                       <input
                         type="text"
-                        placeholder="e.g. HDP-JAB-9912 (Manual Fill)"
                         value={newAsset.accessorySerial || ''}
                         onChange={(e) => setNewAsset({ ...newAsset, accessorySerial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono text-gray-900 font-bold"
@@ -2319,7 +2300,6 @@ const AssetManagement = () => {
                     <input
                       type="text"
                       required={newAsset.category === 'SIM Card'}
-                      placeholder="S/N: LROAXH46"
                       value={newAsset.simNumber}
                       onChange={(e) => setNewAsset({ ...newAsset, simNumber: e.target.value, serial: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono bg-white text-gray-800"
@@ -2329,7 +2309,6 @@ const AssetManagement = () => {
                     <label className="block text-xs font-bold text-gray-700 mb-1">SIM Mobile Phone Number</label>
                     <input
                       type="text"
-                      placeholder="Mobile number..."
                       value={newAsset.simPhoneNumber}
                       onChange={(e) => setNewAsset({ ...newAsset, simPhoneNumber: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-sans"
@@ -2341,7 +2320,6 @@ const AssetManagement = () => {
                     <label className="block text-xs font-bold text-gray-700 mb-1">Telecom Carrier / Provider</label>
                     <input
                       type="text"
-                      placeholder="Carrier provider..."
                       value={newAsset.simCarrier}
                       onChange={(e) => setNewAsset({ ...newAsset, simCarrier: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white"
@@ -2434,7 +2412,6 @@ const AssetManagement = () => {
                   <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
                     <input
                       type="text"
-                      placeholder="Type employee signature..."
                       value={newAsset.digitalSignature || ''}
                       onChange={(e) => setNewAsset({ ...newAsset, digitalSignature: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-serif italic text-blue-900 font-bold bg-white"
@@ -2474,7 +2451,6 @@ const AssetManagement = () => {
                   <label className="block text-xs font-bold text-gray-700 mb-1">Location</label>
                   <input
                     type="text"
-                    placeholder="e.g. Bangalore"
                     value={newAsset.location}
                     onChange={(e) => setNewAsset({ ...newAsset, location: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2528,7 +2504,6 @@ const AssetManagement = () => {
                   <input
                     type="text"
                     list="edit-employee-list"
-                    placeholder="Enter employee name manually..."
                     value={editingAsset.assignedTo || ''}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -2554,7 +2529,6 @@ const AssetManagement = () => {
                   <label className="block text-xs font-bold text-blue-900 mb-1">Assigned To Employee Email Id</label>
                   <input
                     type="email"
-                    placeholder="e.g. employee@company.com"
                     value={editingAsset.assignedToEmail || ''}
                     onChange={(e) => setEditingAsset({ ...editingAsset, assignedToEmail: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono text-gray-800"
@@ -2568,7 +2542,6 @@ const AssetManagement = () => {
                   <label className="block text-xs font-bold text-gray-700 mb-1">Asset Code / Tag</label>
                   <input
                     type="text"
-                    placeholder="TGBS/B/L10"
                     value={editingAsset.assetCode || ''}
                     onChange={(e) => setEditingAsset({ ...editingAsset, assetCode: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono bg-white text-gray-800"
@@ -2578,7 +2551,6 @@ const AssetManagement = () => {
                   <label className="block text-xs font-bold text-gray-700 mb-1">Asset Info / Name</label>
                   <input
                     type="text"
-                    placeholder="Lenovo V310-14ISK"
                     value={editingAsset.name}
                     onChange={(e) => setEditingAsset({ ...editingAsset, name: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-bold text-gray-900"
@@ -2613,7 +2585,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-gray-700 mb-1">Model Date / Release Date</label>
                       <input
                         type="text"
-                        placeholder="Mar-18"
                         value={editingAsset.modelDate || editingAsset.purchaseDate || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, modelDate: e.target.value, purchaseDate: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-sans bg-white"
@@ -2623,7 +2594,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-gray-700 mb-1">CPU Serial Number</label>
                       <input
                         type="text"
-                        placeholder="S/N: LROAXH46"
                         value={editingAsset.serial || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, serial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono text-gray-800"
@@ -2633,7 +2603,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-gray-700 mb-1">Processor</label>
                       <input
                         type="text"
-                        placeholder="Intel i3 6th Gen"
                         value={editingAsset.processor || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, processor: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2647,7 +2616,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-gray-700 mb-1">Ram</label>
                       <input
                         type="text"
-                        placeholder="8 GB"
                         value={editingAsset.ram || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, ram: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2657,7 +2625,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-gray-700 mb-1">HHD / Storage</label>
                       <input
                         type="text"
-                        placeholder="256 Gb SSD Hard Disk"
                         value={editingAsset.storage || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, storage: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2667,7 +2634,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-gray-700 mb-1">Graphic Card</label>
                       <input
                         type="text"
-                        placeholder="e.g. NVIDIA RTX 3060"
                         value={editingAsset.graphicCard || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, graphicCard: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2677,7 +2643,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-gray-700 mb-1">OS</label>
                       <input
                         type="text"
-                        placeholder="Windows 10"
                         value={editingAsset.os || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, os: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
@@ -2690,7 +2655,6 @@ const AssetManagement = () => {
                     <label className="block text-xs font-bold text-gray-700 mb-1">Software</label>
                     <input
                       type="text"
-                      placeholder="Microsoft 365,Hubspot"
                       value={editingAsset.software || ''}
                       onChange={(e) => setEditingAsset({ ...editingAsset, software: e.target.value })}
                       className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono text-gray-800"
@@ -2703,7 +2667,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-purple-900 mb-1">Monitor Name</label>
                       <input
                         type="text"
-                        placeholder="e.g. Dell UltraSharp 27"
                         value={editingAsset.monitorName || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, monitorName: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white"
@@ -2713,7 +2676,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-purple-900 mb-1">Monitor- Serial Number</label>
                       <input
                         type="text"
-                        placeholder="e.g. MON-DEL-2722-A"
                         value={editingAsset.monitorSerial || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, monitorSerial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono"
@@ -2727,7 +2689,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-emerald-900 mb-1">Mouse Model</label>
                       <input
                         type="text"
-                        placeholder="e.g. Logitech MX Master 3S"
                         value={editingAsset.mouseModel || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, mouseModel: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white"
@@ -2737,7 +2698,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-emerald-900 mb-1">Serial Number (Mouse)</label>
                       <input
                         type="text"
-                        placeholder="e.g. MS-LOG-MX3-01"
                         value={editingAsset.mouseSerial || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, mouseSerial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono"
@@ -2753,7 +2713,6 @@ const AssetManagement = () => {
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Headphone / RJ45 Cable / Dongle"
                         value={editingAsset.accessoryItem || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, accessoryItem: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-medium text-gray-900"
@@ -2763,7 +2722,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-cyan-950 mb-1">Model Name</label>
                       <input
                         type="text"
-                        placeholder="e.g. Jabra Evolve 65 / Cat6 Cable"
                         value={editingAsset.accessoryModel || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, accessoryModel: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-medium text-gray-900"
@@ -2773,7 +2731,6 @@ const AssetManagement = () => {
                       <label className="block text-xs font-bold text-cyan-950 mb-1">Serial Number (Accessory S/N)</label>
                       <input
                         type="text"
-                        placeholder="e.g. HDP-JAB-9912 (Manual Fill)"
                         value={editingAsset.accessorySerial || ''}
                         onChange={(e) => setEditingAsset({ ...editingAsset, accessorySerial: e.target.value })}
                         className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white font-mono text-gray-900 font-bold"
@@ -2794,7 +2751,6 @@ const AssetManagement = () => {
                     <label className="block text-xs font-bold text-gray-700 mb-1">SIM Serial Number (ICCID)</label>
                     <input
                       type="text"
-                      placeholder="S/N: LROAXH46"
                       value={editingAsset.simNumber || (editingAsset.category === 'SIM Card' ? editingAsset.serial : '')}
                       onChange={(e) => setEditingAsset({ ...editingAsset, simNumber: e.target.value, serial: editingAsset.category === 'SIM Card' ? e.target.value : editingAsset.serial })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-mono bg-white text-gray-800"
@@ -2804,7 +2760,6 @@ const AssetManagement = () => {
                     <label className="block text-xs font-bold text-gray-700 mb-1">SIM Mobile Phone Number</label>
                     <input
                       type="text"
-                      placeholder="Mobile number..."
                       value={editingAsset.simPhoneNumber || ''}
                       onChange={(e) => setEditingAsset({ ...editingAsset, simPhoneNumber: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white"
@@ -2816,7 +2771,6 @@ const AssetManagement = () => {
                     <label className="block text-xs font-bold text-gray-700 mb-1">Telecom Carrier / Provider</label>
                     <input
                       type="text"
-                      placeholder="Carrier provider..."
                       value={editingAsset.simCarrier || ''}
                       onChange={(e) => setEditingAsset({ ...editingAsset, simCarrier: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-white"
@@ -2912,7 +2866,6 @@ const AssetManagement = () => {
                   <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
                     <input
                       type="text"
-                      placeholder="Type employee signature..."
                       value={editingAsset.digitalSignature || ''}
                       onChange={(e) => setEditingAsset({ ...editingAsset, digitalSignature: e.target.value })}
                       className="w-full py-1.5 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-serif italic text-blue-900 font-bold bg-white"
@@ -2952,7 +2905,6 @@ const AssetManagement = () => {
                   <label className="block text-xs font-bold text-gray-700 mb-1">Location</label>
                   <input
                     type="text"
-                    placeholder="Bangalore"
                     value={editingAsset.location || 'Bangalore'}
                     onChange={(e) => setEditingAsset({ ...editingAsset, location: e.target.value })}
                     className="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-gray-800 font-medium"
